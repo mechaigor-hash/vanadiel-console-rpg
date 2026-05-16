@@ -21,6 +21,9 @@
 - [x] Added fishing foundation with freshwater, saltwater, and ice-fishing examples.
 - [x] Added interactive turn-based combat with attack/cast/defend/flee choices.
 - [x] Added interactive fishing with reel/wait/slacken tension management.
+- [x] Added reusable text-GUI screen navigator with back/home/quit controls.
+- [x] Split gameplay into Main / World / Combat / Gathering / Crafting screens.
+- [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
 - [x] Added README with run/test instructions and project checklist.
@@ -32,9 +35,9 @@
 
 ### GitHub / project setup
 
-- [ ] Create GitHub repo as **public**: `mechaigor-hash/vanadiel-console-rpg`.
-- [ ] Push local commits to GitHub.
-- [ ] Open repo in browser and show Kalidor the link.
+- [x] Create GitHub repo as **public**: `mechaigor-hash/vanadiel-console-rpg`.
+- [x] Push local commits to GitHub.
+- [x] Open repo in browser and show Kalidor the link.
 - [ ] Keep committing/pushing iterative revisions.
 
 ### Gameplay
@@ -62,7 +65,8 @@
 - [ ] Add content-pack validation with friendly errors.
 - [ ] Document the JSON schema for items, mobs, maps, quests, NPCs, recipes, and gathering nodes.
 - [ ] Split bundled content into separate files by type once it grows.
-- [ ] Add more starter-zone mobs and loot tables.
+- [x] Add first pass of starter-zone mobs and loot tables.
+- [ ] Add deeper starter-zone mob coverage from wiki pages.
 - [ ] Add more fish by water/body type.
 - [ ] Add more mining/logging/harvesting nodes.
 - [ ] Add shop/vendor data.
@@ -71,6 +75,7 @@
 
 - [ ] Add save-slot/character-management screen.
 - [ ] Add better inventory screens grouped by item type.
+- [x] Add basic map/location browser menu.
 - [ ] Add map/location travel menu.
 - [ ] Add NPC interaction menu.
 - [ ] Add help screen explaining commands/systems.

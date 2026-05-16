@@ -13,10 +13,12 @@ if __package__ in {None, ""}:
     from vanadiel_console.db import connect, create_character, init_db, list_inventory
     from vanadiel_console.models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
     from vanadiel_console.systems import craft, finish_combat_victory, gather, load_mob_combatant, load_player_combatant, resolve_combat_turn, resolve_fishing_turn, start_fishing
+    from vanadiel_console.ui import MenuOption, Navigator, Screen
 else:
     from .db import connect, create_character, init_db, list_inventory
     from .models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
     from .systems import craft, finish_combat_victory, gather, load_mob_combatant, load_player_combatant, resolve_combat_turn, resolve_fishing_turn, start_fishing
+    from .ui import MenuOption, Navigator, Screen
 
 DB_PATH = Path(os.environ.get("VANADIEL_DB", "vanadiel.sqlite3"))
 
@@ -127,6 +129,27 @@ def browse_world(con: sqlite3.Connection) -> None:
         print(f"  - [{row['quest_type']}] {row['title']}")
 
 
+def browse_locations(con: sqlite3.Connection) -> None:
+    print(f"\n{BOLD}Locations{RESET}")
+    for row in con.execute("SELECT * FROM maps ORDER BY region, name"):
+        water = f" / {row['water_type']} water" if row["water_type"] else ""
+        print(f"  - {row['name']} [{row['region']}{water}]")
+
+
+def browse_npcs(con: sqlite3.Connection) -> None:
+    print(f"\n{BOLD}NPCs{RESET}")
+    for row in con.execute("SELECT n.name, m.name AS map_name, n.dialogue FROM npcs n JOIN maps m ON m.slug=n.map_slug ORDER BY m.name, n.name"):
+        print(f"  - {row['name']} @ {row['map_name']}: \"{row['dialogue']}\"")
+
+
+def browse_mobs(con: sqlite3.Connection) -> None:
+    print(f"\n{BOLD}Mobs{RESET}")
+    for row in con.execute("SELECT mobs.name, family, job, level, maps.name AS map_name FROM mobs LEFT JOIN maps ON maps.slug=mobs.map_slug ORDER BY maps.name, level, mobs.name"):
+        job = f" {row['job']}" if row["job"] else ""
+        where = row["map_name"] or "Unknown"
+        print(f"  - Lv{row['level']} {row['name']} ({row['family']}{job}) @ {where}")
+
+
 def print_drops(drops: list[tuple[str, int]]) -> str:
     if not drops:
         return "none"
@@ -212,42 +235,73 @@ def fishing_screen(con: sqlite3.Connection, character_id: int, node_slug: str) -
 
 
 def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
-    while True:
-        clear()
+    def header() -> None:
         print(ART)
         show_character(con, character_id)
-        print(f"\n{BOLD}Menu{RESET}")
-        print("  1. Browse maps/NPCs/quests")
-        print("  2. Fight sample mob: Yagudo Acolyte Lv5 WHM")
-        print("  3. Mine copper in Bastok Mines")
-        print("  4. Fish freshwater pond")
-        print("  5. Fish saltwater coast")
-        print("  6. Ice fish at Qufim")
-        print("  7. Craft Bronze Ingot")
-        print("  0. Quit")
-        choice = input("> ").strip()
+
+    def action(fn) -> None:
         try:
-            if choice == "1":
-                browse_world(con)
-            elif choice == "2":
-                combat_screen(con, character_id, "yagudo_acolyte_l5")
-            elif choice == "3":
-                print(f"{GREEN}Gathered:{RESET} {gather(con, character_id, 'bastok_copper_vein')[0]}")
-            elif choice == "4":
-                fishing_screen(con, character_id, "ronfaure_pond")
-            elif choice == "5":
-                fishing_screen(con, character_id, "bastore_surf")
-            elif choice == "6":
-                fishing_screen(con, character_id, "qufim_ice_hole")
-            elif choice == "7":
-                print(f"{GREEN}Crafted Bronze Ingot!{RESET}" if craft(con, character_id, "smelt_bronze") else f"{RED}Need 3 Copper Ore.{RESET}")
-            elif choice == "0":
-                return
-            else:
-                print(f"{RED}Invalid option.{RESET}")
+            fn()
         except Exception as exc:  # Keep console game resilient while prototyping.
             print(f"{RED}Error: {exc}{RESET}")
         pause()
+
+    screens = {
+        "main": Screen(
+            "main",
+            "Main Menu",
+            [
+                MenuOption("1", "World browser", target="world"),
+                MenuOption("2", "Combat", target="combat"),
+                MenuOption("3", "Gathering", target="gathering"),
+                MenuOption("4", "Crafting", target="crafting"),
+            ],
+        ),
+        "world": Screen(
+            "world",
+            "World Browser",
+            [
+                MenuOption("1", "Locations", lambda: action(lambda: browse_locations(con))),
+                MenuOption("2", "NPCs", lambda: action(lambda: browse_npcs(con))),
+                MenuOption("3", "Mobs", lambda: action(lambda: browse_mobs(con))),
+                MenuOption("4", "Quests and missions", lambda: action(lambda: browse_world(con))),
+            ],
+        ),
+        "combat": Screen(
+            "combat",
+            "Combat",
+            [
+                MenuOption("1", "Fight Yagudo Acolyte Lv5 WHM", lambda: action(lambda: combat_screen(con, character_id, "yagudo_acolyte_l5"))),
+                MenuOption("2", "Fight Forest Hare Lv2", lambda: action(lambda: combat_screen(con, character_id, "forest_hare_l2"))),
+                MenuOption("3", "Fight Quadav Recruit Lv8", lambda: action(lambda: combat_screen(con, character_id, "quadav_recruit_l8"))),
+                MenuOption("4", "Fight Goblin Smithy Lv18", lambda: action(lambda: combat_screen(con, character_id, "goblin_smithy_l18"))),
+            ],
+        ),
+        "gathering": Screen(
+            "gathering",
+            "Gathering & Fishing",
+            [
+                MenuOption("1", "Mine copper in Bastok Mines", lambda: action(lambda: print(f"{GREEN}Gathered:{RESET} {gather(con, character_id, 'bastok_copper_vein')[0]}"))),
+                MenuOption("2", "Fish freshwater pond", lambda: action(lambda: fishing_screen(con, character_id, "ronfaure_pond"))),
+                MenuOption("3", "Fish saltwater coast", lambda: action(lambda: fishing_screen(con, character_id, "bastore_surf"))),
+                MenuOption("4", "Ice fish at Qufim", lambda: action(lambda: fishing_screen(con, character_id, "qufim_ice_hole"))),
+            ],
+        ),
+        "crafting": Screen(
+            "crafting",
+            "Crafting",
+            [
+                MenuOption("1", "Craft Bronze Ingot", lambda: action(lambda: print(f"{GREEN}Crafted Bronze Ingot!{RESET}" if craft(con, character_id, "smelt_bronze") else f"{RED}Need 3 Copper Ore.{RESET}"))),
+            ],
+        ),
+    }
+
+    nav = Navigator(screens)
+    while nav.running:
+        clear()
+        header()
+        nav.render()
+        nav.handle(input("> "))
 
 
 def main() -> None:

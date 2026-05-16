@@ -15,6 +15,8 @@ def test_core_content_pack_loads_from_json():
     content = load_content_pack()
     assert any(item["slug"] == "scroll_cure" for item in content["items"])
     assert any(mob["slug"] == "yagudo_acolyte_l5" for mob in content["mobs"])
+    assert any(zone["slug"] == "jugner_forest_s" for zone in content["maps"])
+    assert any(mob["slug"] == "campaign_orc_l72" for mob in content["mobs"])
 
 
 def test_character_stats_are_affected_by_race_job_subjob_and_nation():
@@ -37,6 +39,20 @@ def test_weighted_yagudo_loot_contains_job_appropriate_table():
     slugs = {row["item_slug"] for row in loot}
     assert "ash_staff" in slugs
     assert "scroll_cure" in slugs
+
+
+def test_expanded_era_content_seeds_locations_npcs_and_mobs():
+    con = memory_db()
+    counts = {
+        "maps": con.execute("SELECT COUNT(*) AS c FROM maps").fetchone()["c"],
+        "npcs": con.execute("SELECT COUNT(*) AS c FROM npcs").fetchone()["c"],
+        "mobs": con.execute("SELECT COUNT(*) AS c FROM mobs").fetchone()["c"],
+    }
+    assert counts["maps"] >= 40
+    assert counts["npcs"] >= 15
+    assert counts["mobs"] >= 30
+    wotg = con.execute("SELECT name FROM maps WHERE slug='southern_sandoria_s'").fetchone()
+    assert wotg["name"] == "Southern San d'Oria (S)"
 
 
 def test_defeat_mob_grants_exp_and_possible_inventory_changes(monkeypatch):

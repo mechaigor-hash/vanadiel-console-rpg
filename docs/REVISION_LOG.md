@@ -1,5 +1,18 @@
 # Revision Log
 
+## Revision 6 - Text-GUI navigation and 75-era/WotG seed slice
+
+- Added reusable `ui.py` text-GUI navigator with screen objects, menu options, breadcrumbs, and back/home/quit commands.
+- Reworked the adventure menu into Main / World / Combat / Gathering / Crafting screens.
+- Added separate world browser screens for locations, NPCs, mobs, and quests/missions.
+- Expanded `core_content.json` toward a 75-era through Wings of the Goddess cutoff:
+  - starting city zones and starter fields for San d'Oria, Bastok, and Windurst
+  - classic party/progression zones such as Valkurm Dunes, Qufim Island, Garlaige Citadel, Crawler's Nest, Davoi, Beadeaux, Castle Oztroja
+  - WotG past-zone seeds such as Southern San d'Oria (S), Bastok Markets (S), Windurst Waters (S), Jugner Forest (S), Pashhow Marshlands (S), Meriphataud Mountains (S)
+  - representative story/useful NPCs and representative mob families/jobs/level bands up to level 72 campaign-style enemies
+- Added more items/materials/crystals/scrolls and weighted loot tables.
+- Added tests that assert expanded era content seeds into SQLite.
+
 ## Revision 5 - Interactive combat and fishing
 
 - Replaced instant sample combat in the UI with an interactive turn-based combat screen.

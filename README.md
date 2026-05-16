@@ -29,12 +29,14 @@ pytest
 ## Current features
 
 - Colour console UI and ASCII title screen.
+- Text-GUI screen navigator with Main / World / Combat / Gathering / Crafting menus, plus back/home/quit controls.
 - Character creation with race, sex, starting nation, main job, and optional subjob.
 - Starting races: Hume, Elvaan, Tarutaru, Mithra, Galka.
 - Starting six jobs: Warrior, Monk, White Mage, Black Mage, Red Mage, Thief.
 - Race, nation, main job, and subjob all affect stats.
 - SQLite persistence for characters, inventory, key items, gear slots, maps, NPCs, mobs, loot, quests, recipes, and gathering nodes.
 - Extensible seed tables for maps, NPCs, mobs, quests/main missions, crafting, fishing, mining, and resource gathering.
+- Expanded 75-era-through-Wings-of-the-Goddess seed slice: starter cities/fields, classic party zones, WotG past zones, representative NPCs, and 30+ representative mobs up to level 72 campaign-style enemies.
 - Weighted mob loot tables, including a level 5 White Mage Yagudo sample that can drop WHM-flavoured gear/scrolls.
 - Interactive turn-based combat with attack, cast, defend, flee, EXP, and loot payout.
 - Interactive fishing with reel/wait/slacken tension management.
@@ -57,6 +59,8 @@ The Python seeder can also load another JSON file with the same top-level keys, 
 ## Repository
 
 Planned GitHub visibility: **public**.
+
+GitHub: <https://github.com/mechaigor-hash/vanadiel-console-rpg>
 
 Project checklist is also tracked in [`TODO.md`](TODO.md).
 
@@ -81,7 +85,7 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 
 - [x] Move seed content into external data packs.
 - [x] Add public project TODO/checklist artifact.
-- [ ] Create public GitHub repository and push commits.
+- [x] Create public GitHub repository and push commits.
 - [ ] Add content-pack validation with friendly error messages.
 - [ ] Add save-slot selection and better character management.
 - [ ] Add equipment equip/unequip and derived combat stats.
@@ -89,9 +93,11 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [x] Add interactive fishing tension loop.
 - [ ] Add quest journal progression and completion rewards.
 - [ ] Add nation-specific opening missions.
-- [ ] Add more maps, NPCs, mobs, fish, recipes, mining/logging nodes.
+- [x] Add first expanded 75-era/WotG seed slice for maps, NPCs, mobs, and loot.
+- [ ] Continue fleshing out maps, NPCs, mobs, fish, recipes, mining/logging nodes.
 - [ ] Add balancing pass for races/jobs/subjobs.
-- [ ] Add richer terminal UI screens and help text.
+- [x] Add richer terminal UI screens and simple movement between menus.
+- [ ] Add help text and terminal-width-aware layout.
 - [ ] Package release builds.
 
 ## Discord project note
