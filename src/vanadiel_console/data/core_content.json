@@ -1,0 +1,413 @@
+{
+  "items": [
+    {
+      "slug": "bronze_sword",
+      "name": "Bronze Sword",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Warrior"
+        ],
+        "damage": 4
+      }
+    },
+    {
+      "slug": "bronze_harness",
+      "name": "Bronze Harness",
+      "kind": "armor",
+      "data": {
+        "slot": "body",
+        "defense": 2
+      }
+    },
+    {
+      "slug": "cesti",
+      "name": "Cesti",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Monk"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "kenpogi",
+      "name": "Kenpogi",
+      "kind": "armor",
+      "data": {
+        "slot": "body",
+        "defense": 1
+      }
+    },
+    {
+      "slug": "ash_staff",
+      "name": "Ash Staff",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "White Mage"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "scroll_cure",
+      "name": "Scroll of Cure",
+      "kind": "scroll",
+      "data": {
+        "spell": "Cure",
+        "jobs": [
+          "White Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "willow_wand",
+      "name": "Willow Wand",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Black Mage"
+        ],
+        "damage": 2
+      }
+    },
+    {
+      "slug": "scroll_stone",
+      "name": "Scroll of Stone",
+      "kind": "scroll",
+      "data": {
+        "spell": "Stone",
+        "jobs": [
+          "Black Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "wax_sword",
+      "name": "Wax Sword",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Red Mage"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "scroll_dia",
+      "name": "Scroll of Dia",
+      "kind": "scroll",
+      "data": {
+        "spell": "Dia",
+        "jobs": [
+          "White Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "bronze_knife",
+      "name": "Bronze Knife",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Thief"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "bandits_vest",
+      "name": "Bandit's Vest",
+      "kind": "armor",
+      "data": {
+        "slot": "body",
+        "defense": 1
+      }
+    },
+    {
+      "slug": "yagudo_feather",
+      "name": "Yagudo Feather",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "beastcoin",
+      "name": "Beastcoin",
+      "kind": "currency",
+      "data": {}
+    },
+    {
+      "slug": "moat_carp",
+      "name": "Moat Carp",
+      "kind": "fish",
+      "data": {
+        "water": "fresh"
+      }
+    },
+    {
+      "slug": "bastore_sardine",
+      "name": "Bastore Sardine",
+      "kind": "fish",
+      "data": {
+        "water": "salt"
+      }
+    },
+    {
+      "slug": "icefish",
+      "name": "Icefish",
+      "kind": "fish",
+      "data": {
+        "water": "ice"
+      }
+    },
+    {
+      "slug": "copper_ore",
+      "name": "Copper Ore",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "bronze_ingot",
+      "name": "Bronze Ingot",
+      "kind": "material",
+      "data": {}
+    }
+  ],
+  "maps": [
+    {
+      "slug": "southern_sandoria_gate",
+      "name": "Southern San d'Oria Gate",
+      "region": "Ronfaure",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "bastok_mines",
+      "name": "Bastok Mines",
+      "region": "Gustaberg",
+      "water_type": null,
+      "resource_nodes": [
+        "mining"
+      ]
+    },
+    {
+      "slug": "windurst_waters",
+      "name": "Windurst Waters",
+      "region": "Sarutabaruta",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "bastore_coast",
+      "name": "Bastore Coast",
+      "region": "Zulkheim",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "qufim_ice_lake",
+      "name": "Qufim Ice Lake",
+      "region": "Qufim",
+      "water_type": "ice",
+      "resource_nodes": [
+        "ice_fishing"
+      ]
+    }
+  ],
+  "npcs": [
+    {
+      "slug": "gate_guard_aile",
+      "name": "Ailevia",
+      "map_slug": "southern_sandoria_gate",
+      "dialogue": "Keep your weapon sharp and your eyes sharper."
+    },
+    {
+      "slug": "miner_desk",
+      "name": "Hungry Miner",
+      "map_slug": "bastok_mines",
+      "dialogue": "Bring me ore and I'll teach you the bones of smithing."
+    }
+  ],
+  "quests": [
+    {
+      "slug": "first_steps",
+      "title": "First Steps Outside the Gate",
+      "quest_type": "main",
+      "start_npc_slug": "gate_guard_aile",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "defeat",
+          "mob_family": "Yagudo",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 100,
+        "items": {
+          "beastcoin": 1
+        }
+      }
+    },
+    {
+      "slug": "ore_for_the_miner",
+      "title": "Ore for the Miner",
+      "quest_type": "side",
+      "start_npc_slug": "miner_desk",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "gather",
+          "item": "copper_ore",
+          "count": 2
+        }
+      ],
+      "rewards": {
+        "items": {
+          "bronze_ingot": 1
+        }
+      }
+    }
+  ],
+  "mobs": [
+    {
+      "slug": "yagudo_acolyte_l5",
+      "name": "Yagudo Acolyte",
+      "family": "Yagudo",
+      "job": "White Mage",
+      "level": 5,
+      "map_slug": "southern_sandoria_gate",
+      "stats": {
+        "hp": 42,
+        "mp": 28
+      }
+    },
+    {
+      "slug": "forest_hare_l2",
+      "name": "Forest Hare",
+      "family": "Beast",
+      "job": null,
+      "level": 2,
+      "map_slug": "southern_sandoria_gate",
+      "stats": {
+        "hp": 24
+      }
+    }
+  ],
+  "loot": [
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "ash_staff",
+      "weight": 20,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "scroll_cure",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "yagudo_feather",
+      "weight": 50,
+      "min_qty": 1,
+      "max_qty": 2
+    },
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "beastcoin",
+      "weight": 30,
+      "min_qty": 1,
+      "max_qty": 3
+    },
+    {
+      "mob_slug": "forest_hare_l2",
+      "item_slug": "beastcoin",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    }
+  ],
+  "recipes": [
+    {
+      "slug": "smelt_bronze",
+      "craft": "Smithing",
+      "result_item_slug": "bronze_ingot",
+      "skill_required": 0,
+      "ingredients": {
+        "copper_ore": 3
+      }
+    }
+  ],
+  "gathering": [
+    {
+      "slug": "bastok_copper_vein",
+      "map_slug": "bastok_mines",
+      "kind": "mining",
+      "loot_table": [
+        {
+          "item": "copper_ore",
+          "weight": 80
+        },
+        {
+          "item": "beastcoin",
+          "weight": 5
+        }
+      ]
+    },
+    {
+      "slug": "ronfaure_pond",
+      "map_slug": "southern_sandoria_gate",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "moat_carp",
+          "weight": 70
+        }
+      ]
+    },
+    {
+      "slug": "bastore_surf",
+      "map_slug": "bastore_coast",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "bastore_sardine",
+          "weight": 75
+        }
+      ]
+    },
+    {
+      "slug": "qufim_ice_hole",
+      "map_slug": "qufim_ice_lake",
+      "kind": "ice_fishing",
+      "loot_table": [
+        {
+          "item": "icefish",
+          "weight": 75
+        }
+      ]
+    }
+  ]
+}

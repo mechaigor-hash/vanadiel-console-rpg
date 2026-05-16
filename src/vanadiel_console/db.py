@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from importlib.resources import files
 from pathlib import Path
-from typing import Any, Iterable
 
 from .models import CharacterBuild, STARTING_GEAR, calculate_stats
 
@@ -194,15 +194,29 @@ def init_db(con: sqlite3.Connection) -> None:
     con.commit()
 
 
-def seed(con: sqlite3.Connection) -> None:
-    con.executemany("INSERT OR IGNORE INTO items(slug, name, kind, data_json) VALUES(?,?,?,?)", [(s, n, k, json.dumps(d)) for s, n, k, d in ITEMS])
-    con.executemany("INSERT OR IGNORE INTO maps(slug, name, region, water_type, resource_nodes_json) VALUES(?,?,?,?,?)", [(s, n, r, w, json.dumps(nodes)) for s, n, r, w, nodes in MAPS])
-    con.executemany("INSERT OR IGNORE INTO npcs(slug, name, map_slug, dialogue) VALUES(?,?,?,?)", NPCS)
-    con.executemany("INSERT OR IGNORE INTO quests(slug, title, quest_type, start_npc_slug, prerequisites_json, objectives_json, rewards_json) VALUES(?,?,?,?,?,?,?)", [(s, t, qt, npc, json.dumps(pre), json.dumps(obj), json.dumps(rew)) for s, t, qt, npc, pre, obj, rew in QUESTS])
-    con.executemany("INSERT OR IGNORE INTO mobs(slug, name, family, job, level, map_slug, stats_json) VALUES(?,?,?,?,?,?,?)", [(s, n, f, j, lvl, m, json.dumps(st)) for s, n, f, j, lvl, m, st in MOBS])
-    con.executemany("INSERT OR IGNORE INTO mob_loot(mob_slug, item_slug, weight, min_qty, max_qty) VALUES(?,?,?,?,?)", LOOT)
-    con.executemany("INSERT OR IGNORE INTO recipes(slug, craft, result_item_slug, skill_required, ingredients_json) VALUES(?,?,?,?,?)", [(s, c, r, sk, json.dumps(ing)) for s, c, r, sk, ing in RECIPES])
-    con.executemany("INSERT OR IGNORE INTO gathering_nodes(slug, map_slug, kind, loot_table_json) VALUES(?,?,?,?)", [(s, m, k, json.dumps(loot)) for s, m, k, loot in GATHERING])
+def load_content_pack(path: str | Path | None = None) -> dict:
+    """Load an extensible content pack.
+
+    By default this reads the bundled core JSON pack. Modders can pass another
+    JSON file with the same top-level keys to seed custom/private content.
+    """
+    if path is None:
+        raw = files("vanadiel_console.data").joinpath("core_content.json").read_text(encoding="utf-8")
+    else:
+        raw = Path(path).read_text(encoding="utf-8")
+    return json.loads(raw)
+
+
+def seed(con: sqlite3.Connection, content_path: str | Path | None = None) -> None:
+    content = load_content_pack(content_path)
+    con.executemany("INSERT OR IGNORE INTO items(slug, name, kind, data_json) VALUES(?,?,?,?)", [(i["slug"], i["name"], i["kind"], json.dumps(i.get("data", {}))) for i in content.get("items", [])])
+    con.executemany("INSERT OR IGNORE INTO maps(slug, name, region, water_type, resource_nodes_json) VALUES(?,?,?,?,?)", [(m["slug"], m["name"], m["region"], m.get("water_type"), json.dumps(m.get("resource_nodes", []))) for m in content.get("maps", [])])
+    con.executemany("INSERT OR IGNORE INTO npcs(slug, name, map_slug, dialogue) VALUES(?,?,?,?)", [(n["slug"], n["name"], n["map_slug"], n.get("dialogue", "")) for n in content.get("npcs", [])])
+    con.executemany("INSERT OR IGNORE INTO quests(slug, title, quest_type, start_npc_slug, prerequisites_json, objectives_json, rewards_json) VALUES(?,?,?,?,?,?,?)", [(q["slug"], q["title"], q.get("quest_type", "side"), q.get("start_npc_slug"), json.dumps(q.get("prerequisites", [])), json.dumps(q.get("objectives", [])), json.dumps(q.get("rewards", {}))) for q in content.get("quests", [])])
+    con.executemany("INSERT OR IGNORE INTO mobs(slug, name, family, job, level, map_slug, stats_json) VALUES(?,?,?,?,?,?,?)", [(m["slug"], m["name"], m["family"], m.get("job"), m["level"], m.get("map_slug"), json.dumps(m.get("stats", {}))) for m in content.get("mobs", [])])
+    con.executemany("INSERT OR IGNORE INTO mob_loot(mob_slug, item_slug, weight, min_qty, max_qty) VALUES(?,?,?,?,?)", [(l["mob_slug"], l["item_slug"], l["weight"], l.get("min_qty", 1), l.get("max_qty", 1)) for l in content.get("loot", [])])
+    con.executemany("INSERT OR IGNORE INTO recipes(slug, craft, result_item_slug, skill_required, ingredients_json) VALUES(?,?,?,?,?)", [(r["slug"], r["craft"], r["result_item_slug"], r.get("skill_required", 0), json.dumps(r.get("ingredients", {}))) for r in content.get("recipes", [])])
+    con.executemany("INSERT OR IGNORE INTO gathering_nodes(slug, map_slug, kind, loot_table_json) VALUES(?,?,?,?)", [(g["slug"], g["map_slug"], g["kind"], json.dumps(g.get("loot_table", []))) for g in content.get("gathering", [])])
 
 
 def slug_for_item_name(con: sqlite3.Connection, name: str) -> str:

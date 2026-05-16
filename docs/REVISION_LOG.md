@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 2 - JSON content pack extraction
+
+- Moved starter content into bundled JSON data pack: `src/vanadiel_console/data/core_content.json`.
+- Added `load_content_pack()` so custom content packs can seed the same SQLite systems later.
+- Updated README extension notes and checklist.
+- Added test coverage for bundled content-pack loading.
+
 ## Revision 1 - Foundation prototype
 
 - Created Python package `vanadiel_console`.

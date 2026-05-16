@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from vanadiel_console.db import add_item, connect, create_character, init_db, list_inventory
+from vanadiel_console.db import add_item, connect, create_character, init_db, list_inventory, load_content_pack
 from vanadiel_console.models import CharacterBuild, calculate_stats
 from vanadiel_console.systems import craft, defeat_mob, fishing_nodes_for_water, gather
 
@@ -9,6 +9,12 @@ def memory_db():
     con = connect(":memory:")
     init_db(con)
     return con
+
+
+def test_core_content_pack_loads_from_json():
+    content = load_content_pack()
+    assert any(item["slug"] == "scroll_cure" for item in content["items"])
+    assert any(mob["slug"] == "yagudo_acolyte_l5" for mob in content["mobs"])
 
 
 def test_character_stats_are_affected_by_race_job_subjob_and_nation():

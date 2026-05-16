@@ -40,17 +40,17 @@ pytest
 
 ## Extending content
 
-For now content is seeded in `src/vanadiel_console/db.py`:
+Bundled starter content now lives in `src/vanadiel_console/data/core_content.json`:
 
-- `ITEMS` adds gear, materials, scrolls, fish, etc.
-- `MAPS` defines regions, water type, and resource node categories.
-- `NPCS` defines location and dialogue.
-- `QUESTS` defines side quests and main missions using JSON-like objectives/rewards.
-- `MOBS` and `LOOT` define mob stats and weighted drops.
-- `RECIPES` defines crafting.
-- `GATHERING` defines fishing/mining/resource nodes.
+- `items` adds gear, materials, scrolls, fish, etc.
+- `maps` defines regions, water type, and resource node categories.
+- `npcs` defines location and dialogue.
+- `quests` defines side quests and main missions using objective/reward objects.
+- `mobs` and `loot` define mob stats and weighted drops.
+- `recipes` defines crafting.
+- `gathering` defines fishing/mining/resource nodes.
 
-Future revisions should move this data into external JSON/YAML packs so new quests, NPCs, maps, items, mobs, fish, and recipes can be added without editing Python.
+The Python seeder can also load another JSON file with the same top-level keys, so future private/mod content can be added without editing code.
 
 ## Checklist
 
@@ -71,7 +71,8 @@ Future revisions should move this data into external JSON/YAML packs so new ques
 
 ### Next revisions
 
-- [ ] Move seed content into external data packs.
+- [x] Move seed content into external data packs.
+- [ ] Add content-pack validation with friendly error messages.
 - [ ] Add save-slot selection and better character management.
 - [ ] Add equipment equip/unequip and derived combat stats.
 - [ ] Add turn-based combat loop rather than instant sample victories.
