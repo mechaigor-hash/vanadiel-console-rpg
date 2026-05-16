@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from vanadiel_console.db import add_item, connect, create_character, init_db, list_inventory, load_content_pack
+from vanadiel_console.db import add_item, connect, create_character, current_location, init_db, list_inventory, load_content_pack, set_current_location
 from vanadiel_console.models import CharacterBuild, calculate_stats
 from vanadiel_console.systems import auto_combat, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather
 
@@ -31,6 +31,15 @@ def test_create_character_writes_inventory_to_sqlite():
     cid = create_character(con, CharacterBuild("Mender", "Hume", "Female", "San d'Oria", "White Mage", None))
     names = {row["name"] for row in list_inventory(con, cid)}
     assert {"Ash Staff", "Scroll of Cure"}.issubset(names)
+    assert current_location(con, cid)["slug"] == "southern_sandoria"
+
+
+def test_character_location_can_be_changed_for_travel():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Walker", "Hume", "Male", "Bastok", "Warrior", None))
+    assert current_location(con, cid)["slug"] == "bastok_markets"
+    set_current_location(con, cid, "west_ronfaure")
+    assert current_location(con, cid)["name"] == "West Ronfaure"
 
 
 def test_weighted_yagudo_loot_contains_job_appropriate_table():

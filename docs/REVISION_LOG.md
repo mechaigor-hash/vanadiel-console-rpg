@@ -1,5 +1,17 @@
 # Revision Log
 
+## Revision 7 - Location-driven menu flow
+
+- Added current-location helpers and legacy location normalization.
+- New characters now start in a nation-appropriate city map slug.
+- Character header now shows current location.
+- Added Travel screen to move between seeded maps.
+- Added Current Location details screen showing local NPCs, mobs, and gathering nodes.
+- Combat can now choose mobs from the current map.
+- Gathering/fishing can now choose nodes from the current map.
+- Kept training shortcuts for quick testing.
+- Added tests for starting location and travel/location updates.
+
 ## Revision 6 - Text-GUI navigation and 75-era/WotG seed slice
 
 - Added reusable `ui.py` text-GUI navigator with screen objects, menu options, breadcrumbs, and back/home/quit commands.

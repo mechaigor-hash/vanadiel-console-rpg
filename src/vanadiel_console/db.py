@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS characters (
     hp INTEGER NOT NULL, mp INTEGER NOT NULL,
     str INTEGER NOT NULL, dex INTEGER NOT NULL, vit INTEGER NOT NULL,
     agi INTEGER NOT NULL, int INTEGER NOT NULL, mnd INTEGER NOT NULL, chr INTEGER NOT NULL,
-    current_map TEXT NOT NULL DEFAULT 'Southern San dOria Gate'
+    current_map TEXT NOT NULL DEFAULT 'southern_sandoria'
 );
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -191,6 +191,7 @@ def init_db(con: sqlite3.Connection) -> None:
     con.executescript(SCHEMA)
     con.execute("INSERT OR REPLACE INTO meta(key, value) VALUES('schema_version', ?)", (str(SCHEMA_VERSION),))
     seed(con)
+    normalize_character_locations(con)
     con.commit()
 
 
@@ -226,12 +227,66 @@ def slug_for_item_name(con: sqlite3.Connection, name: str) -> str:
     return row["slug"]
 
 
+STARTING_MAP_BY_NATION = {
+    "San d'Oria": "southern_sandoria",
+    "Bastok": "bastok_markets",
+    "Windurst": "windurst_waters",
+}
+
+
+LEGACY_MAP_ALIASES = {
+    "Southern San dOria Gate": "southern_sandoria",
+    "Southern San d'Oria Gate": "southern_sandoria",
+    "Southern San d'Oria": "southern_sandoria",
+    "Bastok Mines": "bastok_mines_city",
+    "Windurst Waters": "windurst_waters",
+}
+
+
+def normalize_character_locations(con: sqlite3.Connection) -> None:
+    """Convert legacy display names to map slugs and repair bad locations."""
+    rows = con.execute("SELECT id, nation, current_map FROM characters").fetchall()
+    for row in rows:
+        current = row["current_map"]
+        candidate = LEGACY_MAP_ALIASES.get(current, current)
+        exists = con.execute("SELECT 1 FROM maps WHERE slug = ?", (candidate,)).fetchone()
+        if not exists:
+            candidate = STARTING_MAP_BY_NATION.get(row["nation"], "southern_sandoria")
+        if candidate != current:
+            con.execute("UPDATE characters SET current_map = ? WHERE id = ?", (candidate, row["id"]))
+
+
+def current_location(con: sqlite3.Connection, character_id: int) -> sqlite3.Row:
+    row = con.execute(
+        """SELECT m.* FROM characters c JOIN maps m ON m.slug = c.current_map WHERE c.id = ?""",
+        (character_id,),
+    ).fetchone()
+    if row:
+        return row
+    normalize_character_locations(con)
+    row = con.execute(
+        """SELECT m.* FROM characters c JOIN maps m ON m.slug = c.current_map WHERE c.id = ?""",
+        (character_id,),
+    ).fetchone()
+    if not row:
+        raise ValueError(f"Character {character_id} has no valid location")
+    return row
+
+
+def set_current_location(con: sqlite3.Connection, character_id: int, map_slug: str) -> None:
+    if not con.execute("SELECT 1 FROM maps WHERE slug = ?", (map_slug,)).fetchone():
+        raise ValueError(f"Unknown map: {map_slug}")
+    con.execute("UPDATE characters SET current_map = ? WHERE id = ?", (map_slug, character_id))
+    con.commit()
+
+
 def create_character(con: sqlite3.Connection, build: CharacterBuild) -> int:
     stats = calculate_stats(build)
+    current_map = STARTING_MAP_BY_NATION.get(build.nation, "southern_sandoria")
     cur = con.execute(
-        """INSERT INTO characters(name, race, sex, nation, main_job, sub_job, hp, mp, str, dex, vit, agi, int, mnd, chr)
-        VALUES(:name,:race,:sex,:nation,:main_job,:sub_job,:hp,:mp,:str,:dex,:vit,:agi,:int,:mnd,:chr)""",
-        {**build.__dict__, **stats},
+        """INSERT INTO characters(name, race, sex, nation, main_job, sub_job, hp, mp, str, dex, vit, agi, int, mnd, chr, current_map)
+        VALUES(:name,:race,:sex,:nation,:main_job,:sub_job,:hp,:mp,:str,:dex,:vit,:agi,:int,:mnd,:chr,:current_map)""",
+        {**build.__dict__, **stats, "current_map": current_map},
     )
     char_id = int(cur.lastrowid)
     for item_name in STARTING_GEAR[build.main_job]:

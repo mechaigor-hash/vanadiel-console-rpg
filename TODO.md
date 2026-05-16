@@ -23,6 +23,8 @@
 - [x] Added interactive fishing with reel/wait/slacken tension management.
 - [x] Added reusable text-GUI screen navigator with back/home/quit controls.
 - [x] Split gameplay into Main / World / Combat / Gathering / Crafting screens.
+- [x] Added Travel menu and current-location display in the character header.
+- [x] Made combat and gathering menus location-driven using the character's current map.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -76,7 +78,7 @@
 - [ ] Add save-slot/character-management screen.
 - [ ] Add better inventory screens grouped by item type.
 - [x] Add basic map/location browser menu.
-- [ ] Add map/location travel menu.
+- [x] Add map/location travel menu.
 - [ ] Add NPC interaction menu.
 - [ ] Add help screen explaining commands/systems.
 - [ ] Add terminal-width-aware layout.

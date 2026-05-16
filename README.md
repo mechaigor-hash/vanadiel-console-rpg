@@ -29,7 +29,7 @@ pytest
 ## Current features
 
 - Colour console UI and ASCII title screen.
-- Text-GUI screen navigator with Main / World / Combat / Gathering / Crafting menus, plus back/home/quit controls.
+- Text-GUI screen navigator with Main / World / Travel / Combat / Gathering / Crafting menus, plus back/home/quit controls.
 - Character creation with race, sex, starting nation, main job, and optional subjob.
 - Starting races: Hume, Elvaan, Tarutaru, Mithra, Galka.
 - Starting six jobs: Warrior, Monk, White Mage, Black Mage, Red Mage, Thief.
@@ -39,7 +39,9 @@ pytest
 - Expanded 75-era-through-Wings-of-the-Goddess seed slice: starter cities/fields, classic party zones, WotG past zones, representative NPCs, and 30+ representative mobs up to level 72 campaign-style enemies.
 - Weighted mob loot tables, including a level 5 White Mage Yagudo sample that can drop WHM-flavoured gear/scrolls.
 - Interactive turn-based combat with attack, cast, defend, flee, EXP, and loot payout.
+- Location-driven combat: local encounters are listed from the character's current map.
 - Interactive fishing with reel/wait/slacken tension management.
+- Location-driven gathering/fishing: local nodes are listed from the character's current map.
 - Fishing split by water type: freshwater, saltwater, and ice fishing samples.
 
 ## Extending content
@@ -97,6 +99,8 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [ ] Continue fleshing out maps, NPCs, mobs, fish, recipes, mining/logging nodes.
 - [ ] Add balancing pass for races/jobs/subjobs.
 - [x] Add richer terminal UI screens and simple movement between menus.
+- [x] Add travel menu and current-location display.
+- [x] Make combat/gathering menus use current-location mobs/nodes.
 - [ ] Add help text and terminal-width-aware layout.
 - [ ] Package release builds.
 

@@ -10,12 +10,12 @@ if __package__ in {None, ""}:
     #   python src/vanadiel_console/app.py
     # Normal package/module execution still uses the relative imports below.
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from vanadiel_console.db import connect, create_character, init_db, list_inventory
+    from vanadiel_console.db import connect, create_character, current_location, init_db, list_inventory, set_current_location
     from vanadiel_console.models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
     from vanadiel_console.systems import craft, finish_combat_victory, gather, load_mob_combatant, load_player_combatant, resolve_combat_turn, resolve_fishing_turn, start_fishing
     from vanadiel_console.ui import MenuOption, Navigator, Screen
 else:
-    from .db import connect, create_character, init_db, list_inventory
+    from .db import connect, create_character, current_location, init_db, list_inventory, set_current_location
     from .models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
     from .systems import craft, finish_combat_victory, gather, load_mob_combatant, load_player_combatant, resolve_combat_turn, resolve_fishing_turn, start_fishing
     from .ui import MenuOption, Navigator, Screen
@@ -106,9 +106,10 @@ def new_character(con: sqlite3.Connection) -> int:
 
 def show_character(con: sqlite3.Connection, character_id: int) -> None:
     row = con.execute("SELECT * FROM characters WHERE id = ?", (character_id,)).fetchone()
+    location = current_location(con, character_id)
     print(f"\n{GREEN}{row['name']}{RESET} Lv{row['level']} {row['race']} {row['sex']} from {row['nation']}")
     sj = f" / {row['sub_job']}" if row["sub_job"] else ""
-    print(f"Job: {row['main_job']}{sj}    EXP: {row['exp']}")
+    print(f"Job: {row['main_job']}{sj}    EXP: {row['exp']}    Location: {location['name']}")
     print("Stats: " + "  ".join(f"{s.upper()} {row[s]}" for s in ["hp", "mp", "str", "dex", "vit", "agi", "int", "mnd", "chr"]))
     print("\nInventory:")
     for item in list_inventory(con, character_id):
@@ -148,6 +149,98 @@ def browse_mobs(con: sqlite3.Connection) -> None:
         job = f" {row['job']}" if row["job"] else ""
         where = row["map_name"] or "Unknown"
         print(f"  - Lv{row['level']} {row['name']} ({row['family']}{job}) @ {where}")
+
+
+def browse_current_location(con: sqlite3.Connection, character_id: int) -> None:
+    loc = current_location(con, character_id)
+    water = f" / {loc['water_type']} water" if loc["water_type"] else ""
+    print(f"\n{BOLD}{loc['name']}{RESET} [{loc['region']}{water}]")
+    print("\nNPCs here:")
+    npcs = con.execute("SELECT name, dialogue FROM npcs WHERE map_slug = ? ORDER BY name", (loc["slug"],)).fetchall()
+    if not npcs:
+        print("  - None spotted.")
+    for npc in npcs:
+        print(f"  - {npc['name']}: \"{npc['dialogue']}\"")
+    print("\nMobs here:")
+    mobs = con.execute("SELECT name, family, job, level FROM mobs WHERE map_slug = ? ORDER BY level, name", (loc["slug"],)).fetchall()
+    if not mobs:
+        print("  - No nearby hostile mobs recorded yet.")
+    for mob in mobs:
+        job = f" {mob['job']}" if mob["job"] else ""
+        print(f"  - Lv{mob['level']} {mob['name']} ({mob['family']}{job})")
+    print("\nGathering nodes:")
+    nodes = con.execute("SELECT slug, kind FROM gathering_nodes WHERE map_slug = ? ORDER BY kind, slug", (loc["slug"],)).fetchall()
+    if not nodes:
+        print("  - None recorded.")
+    for node in nodes:
+        print(f"  - {node['kind']}: {node['slug']}")
+
+
+def travel_screen(con: sqlite3.Connection, character_id: int) -> None:
+    maps = con.execute("SELECT slug, name, region FROM maps ORDER BY region, name").fetchall()
+    print(f"\n{BOLD}Travel{RESET}")
+    for i, row in enumerate(maps, start=1):
+        print(f"  {i}. {row['name']} ({row['region']})")
+    raw = input("Destination number, or blank to cancel> ").strip()
+    if not raw:
+        print(f"{YELLOW}Travel cancelled.{RESET}")
+        return
+    if not raw.isdigit() or not (1 <= int(raw) <= len(maps)):
+        print(f"{RED}Invalid destination.{RESET}")
+        return
+    dest = maps[int(raw) - 1]
+    set_current_location(con, character_id, dest["slug"])
+    print(f"{GREEN}Travelled to {dest['name']}.{RESET}")
+
+
+def choose_local_mob(con: sqlite3.Connection, character_id: int) -> str | None:
+    loc = current_location(con, character_id)
+    mobs = con.execute("SELECT slug, name, level, job FROM mobs WHERE map_slug = ? ORDER BY level, name", (loc["slug"],)).fetchall()
+    if not mobs:
+        print(f"{YELLOW}No mobs recorded for {loc['name']} yet. Use World > Mobs to browse all known mobs.{RESET}")
+        return None
+    print(f"\n{BOLD}Mobs in {loc['name']}{RESET}")
+    for i, mob in enumerate(mobs, start=1):
+        job = f" {mob['job']}" if mob["job"] else ""
+        print(f"  {i}. Lv{mob['level']} {mob['name']}{job}")
+    raw = input("Fight which mob? ").strip()
+    if not raw.isdigit() or not (1 <= int(raw) <= len(mobs)):
+        print(f"{RED}Invalid target.{RESET}")
+        return None
+    return mobs[int(raw) - 1]["slug"]
+
+
+def local_combat_screen(con: sqlite3.Connection, character_id: int) -> None:
+    mob_slug = choose_local_mob(con, character_id)
+    if mob_slug:
+        combat_screen(con, character_id, mob_slug)
+
+
+def choose_local_node(con: sqlite3.Connection, character_id: int) -> str | None:
+    loc = current_location(con, character_id)
+    nodes = con.execute("SELECT slug, kind FROM gathering_nodes WHERE map_slug = ? ORDER BY kind, slug", (loc["slug"],)).fetchall()
+    if not nodes:
+        print(f"{YELLOW}No gathering nodes recorded for {loc['name']} yet.{RESET}")
+        return None
+    print(f"\n{BOLD}Gathering in {loc['name']}{RESET}")
+    for i, node in enumerate(nodes, start=1):
+        print(f"  {i}. {node['kind']} - {node['slug']}")
+    raw = input("Use which node? ").strip()
+    if not raw.isdigit() or not (1 <= int(raw) <= len(nodes)):
+        print(f"{RED}Invalid node.{RESET}")
+        return None
+    return nodes[int(raw) - 1]["slug"]
+
+
+def local_gathering_screen(con: sqlite3.Connection, character_id: int) -> None:
+    node_slug = choose_local_node(con, character_id)
+    if not node_slug:
+        return
+    node = con.execute("SELECT kind FROM gathering_nodes WHERE slug = ?", (node_slug,)).fetchone()
+    if "fishing" in node["kind"]:
+        fishing_screen(con, character_id, node_slug)
+    else:
+        print(f"{GREEN}Gathered:{RESET} {gather(con, character_id, node_slug)[0]}")
 
 
 def print_drops(drops: list[tuple[str, int]]) -> str:
@@ -252,9 +345,10 @@ def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
             "Main Menu",
             [
                 MenuOption("1", "World browser", target="world"),
-                MenuOption("2", "Combat", target="combat"),
-                MenuOption("3", "Gathering", target="gathering"),
-                MenuOption("4", "Crafting", target="crafting"),
+                MenuOption("2", "Travel", lambda: action(lambda: travel_screen(con, character_id))),
+                MenuOption("3", "Combat", target="combat"),
+                MenuOption("4", "Gathering", target="gathering"),
+                MenuOption("5", "Crafting", target="crafting"),
             ],
         ),
         "world": Screen(
@@ -264,27 +358,28 @@ def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
                 MenuOption("1", "Locations", lambda: action(lambda: browse_locations(con))),
                 MenuOption("2", "NPCs", lambda: action(lambda: browse_npcs(con))),
                 MenuOption("3", "Mobs", lambda: action(lambda: browse_mobs(con))),
-                MenuOption("4", "Quests and missions", lambda: action(lambda: browse_world(con))),
+                MenuOption("4", "Current location details", lambda: action(lambda: browse_current_location(con, character_id))),
+                MenuOption("5", "Quests and missions", lambda: action(lambda: browse_world(con))),
             ],
         ),
         "combat": Screen(
             "combat",
             "Combat",
             [
-                MenuOption("1", "Fight Yagudo Acolyte Lv5 WHM", lambda: action(lambda: combat_screen(con, character_id, "yagudo_acolyte_l5"))),
-                MenuOption("2", "Fight Forest Hare Lv2", lambda: action(lambda: combat_screen(con, character_id, "forest_hare_l2"))),
-                MenuOption("3", "Fight Quadav Recruit Lv8", lambda: action(lambda: combat_screen(con, character_id, "quadav_recruit_l8"))),
-                MenuOption("4", "Fight Goblin Smithy Lv18", lambda: action(lambda: combat_screen(con, character_id, "goblin_smithy_l18"))),
+                MenuOption("1", "Fight a local mob", lambda: action(lambda: local_combat_screen(con, character_id))),
+                MenuOption("2", "Training: Yagudo Acolyte Lv5 WHM", lambda: action(lambda: combat_screen(con, character_id, "yagudo_acolyte_l5"))),
+                MenuOption("3", "Training: Forest Hare Lv2", lambda: action(lambda: combat_screen(con, character_id, "forest_hare_l2"))),
             ],
         ),
         "gathering": Screen(
             "gathering",
             "Gathering & Fishing",
             [
-                MenuOption("1", "Mine copper in Bastok Mines", lambda: action(lambda: print(f"{GREEN}Gathered:{RESET} {gather(con, character_id, 'bastok_copper_vein')[0]}"))),
-                MenuOption("2", "Fish freshwater pond", lambda: action(lambda: fishing_screen(con, character_id, "ronfaure_pond"))),
-                MenuOption("3", "Fish saltwater coast", lambda: action(lambda: fishing_screen(con, character_id, "bastore_surf"))),
-                MenuOption("4", "Ice fish at Qufim", lambda: action(lambda: fishing_screen(con, character_id, "qufim_ice_hole"))),
+                MenuOption("1", "Use local gathering/fishing node", lambda: action(lambda: local_gathering_screen(con, character_id))),
+                MenuOption("2", "Training: mine copper in Bastok Mines", lambda: action(lambda: print(f"{GREEN}Gathered:{RESET} {gather(con, character_id, 'bastok_copper_vein')[0]}"))),
+                MenuOption("3", "Training: fish freshwater pond", lambda: action(lambda: fishing_screen(con, character_id, "ronfaure_pond"))),
+                MenuOption("4", "Training: fish saltwater coast", lambda: action(lambda: fishing_screen(con, character_id, "bastore_surf"))),
+                MenuOption("5", "Training: ice fish at Qufim", lambda: action(lambda: fishing_screen(con, character_id, "qufim_ice_hole"))),
             ],
         ),
         "crafting": Screen(
