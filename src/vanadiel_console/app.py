@@ -176,11 +176,47 @@ def browse_current_location(con: sqlite3.Connection, character_id: int) -> None:
         print(f"  - {node['kind']}: {node['slug']}")
 
 
+def status_screen(con: sqlite3.Connection, character_id: int) -> None:
+    row = con.execute("SELECT * FROM characters WHERE id = ?", (character_id,)).fetchone()
+    loc = current_location(con, character_id)
+    print(f"\n{BOLD}Character Status{RESET}")
+    print(f"Name: {row['name']}")
+    print(f"Race/Sex/Nation: {row['race']} / {row['sex']} / {row['nation']}")
+    print(f"Jobs: {row['main_job']}" + (f" / {row['sub_job']}" if row['sub_job'] else ""))
+    print(f"Level/EXP: {row['level']} / {row['exp']}")
+    print(f"Location: {loc['name']} ({loc['region']})")
+    print("Stats: " + "  ".join(f"{s.upper()} {row[s]}" for s in ["hp", "mp", "str", "dex", "vit", "agi", "int", "mnd", "chr"]))
+    inv_count = con.execute("SELECT COALESCE(SUM(quantity), 0) AS c FROM inventory WHERE character_id = ?", (character_id,)).fetchone()["c"]
+    print(f"Inventory items: {inv_count}")
+
+
+def help_screen() -> None:
+    print(f"\n{BOLD}Help{RESET}")
+    print("Use number keys to select menu options.")
+    print("Global commands: b = Back, h = Home, q = Quit.")
+    print("Travel changes your current map. Combat and gathering now use that map.")
+    print("Combat: attack is steady, cast spends MP, defend reduces incoming damage, flee can fail.")
+    print("Fishing: reel builds progress and tension, wait is safer, slacken lowers tension.")
+
+
 def travel_screen(con: sqlite3.Connection, character_id: int) -> None:
-    maps = con.execute("SELECT slug, name, region FROM maps ORDER BY region, name").fetchall()
+    regions = con.execute("SELECT region, COUNT(*) AS c FROM maps GROUP BY region ORDER BY region").fetchall()
     print(f"\n{BOLD}Travel{RESET}")
+    print("Choose a region first:")
+    for i, row in enumerate(regions, start=1):
+        print(f"  {i}. {row['region']} ({row['c']} maps)")
+    raw = input("Region number, or blank to cancel> ").strip()
+    if not raw:
+        print(f"{YELLOW}Travel cancelled.{RESET}")
+        return
+    if not raw.isdigit() or not (1 <= int(raw) <= len(regions)):
+        print(f"{RED}Invalid region.{RESET}")
+        return
+    region = regions[int(raw) - 1]["region"]
+    maps = con.execute("SELECT slug, name, region FROM maps WHERE region = ? ORDER BY name", (region,)).fetchall()
+    print(f"\n{BOLD}{region}{RESET}")
     for i, row in enumerate(maps, start=1):
-        print(f"  {i}. {row['name']} ({row['region']})")
+        print(f"  {i}. {row['name']}")
     raw = input("Destination number, or blank to cancel> ").strip()
     if not raw:
         print(f"{YELLOW}Travel cancelled.{RESET}")
@@ -349,6 +385,8 @@ def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
                 MenuOption("3", "Combat", target="combat"),
                 MenuOption("4", "Gathering", target="gathering"),
                 MenuOption("5", "Crafting", target="crafting"),
+                MenuOption("6", "Status", lambda: action(lambda: status_screen(con, character_id))),
+                MenuOption("?", "Help", lambda: action(help_screen)),
             ],
         ),
         "world": Screen(

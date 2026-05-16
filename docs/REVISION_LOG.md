@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 8 - UI orientation pass
+
+- Added Status screen with character identity, jobs, level/EXP, location, stats, and inventory count.
+- Added Help screen explaining global navigation, travel, combat, and fishing controls.
+- Improved Travel flow by grouping destinations by region before choosing a map.
+- Added Help/Status options to the Main Menu.
+
 ## Revision 7 - Location-driven menu flow
 
 - Added current-location helpers and legacy location normalization.

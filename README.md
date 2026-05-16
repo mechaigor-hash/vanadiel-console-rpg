@@ -30,6 +30,8 @@ pytest
 
 - Colour console UI and ASCII title screen.
 - Text-GUI screen navigator with Main / World / Travel / Combat / Gathering / Crafting menus, plus back/home/quit controls.
+- Status and Help screens for quick orientation.
+- Region-grouped travel picker so the map list is less painful to navigate.
 - Character creation with race, sex, starting nation, main job, and optional subjob.
 - Starting races: Hume, Elvaan, Tarutaru, Mithra, Galka.
 - Starting six jobs: Warrior, Monk, White Mage, Black Mage, Red Mage, Thief.
