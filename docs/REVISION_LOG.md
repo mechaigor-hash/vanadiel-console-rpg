@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 9 - Inventory UI and safer local prompts
+
+- Added Inventory screen grouped by item kind.
+- Added Inventory option to the Main Menu.
+- Local combat and gathering prompts now support blank-to-cancel.
+- Added a test ensuring inventory rows expose item kind for grouped UI.
+
 ## Revision 8 - UI orientation pass
 
 - Added Status screen with character identity, jobs, level/EXP, location, stats, and inventory count.

@@ -190,6 +190,22 @@ def status_screen(con: sqlite3.Connection, character_id: int) -> None:
     print(f"Inventory items: {inv_count}")
 
 
+def inventory_screen(con: sqlite3.Connection, character_id: int) -> None:
+    print(f"\n{BOLD}Inventory{RESET}")
+    rows = list_inventory(con, character_id)
+    if not rows:
+        print("  Empty. The goblin pockets are tragically bare.")
+        return
+    grouped: dict[str, list[sqlite3.Row]] = {}
+    for row in rows:
+        grouped.setdefault(row["kind"], []).append(row)
+    for kind in sorted(grouped):
+        print(f"\n{CYAN}{kind.title()}{RESET}")
+        for item in grouped[kind]:
+            equipped = f" [{item['equipped_slot']}]" if item["equipped_slot"] else ""
+            print(f"  - {item['name']} x{item['quantity']}{equipped}")
+
+
 def help_screen() -> None:
     print(f"\n{BOLD}Help{RESET}")
     print("Use number keys to select menu options.")
@@ -239,7 +255,10 @@ def choose_local_mob(con: sqlite3.Connection, character_id: int) -> str | None:
     for i, mob in enumerate(mobs, start=1):
         job = f" {mob['job']}" if mob["job"] else ""
         print(f"  {i}. Lv{mob['level']} {mob['name']}{job}")
-    raw = input("Fight which mob? ").strip()
+    raw = input("Fight which mob? Blank to cancel> ").strip()
+    if not raw:
+        print(f"{YELLOW}Combat cancelled.{RESET}")
+        return None
     if not raw.isdigit() or not (1 <= int(raw) <= len(mobs)):
         print(f"{RED}Invalid target.{RESET}")
         return None
@@ -261,7 +280,10 @@ def choose_local_node(con: sqlite3.Connection, character_id: int) -> str | None:
     print(f"\n{BOLD}Gathering in {loc['name']}{RESET}")
     for i, node in enumerate(nodes, start=1):
         print(f"  {i}. {node['kind']} - {node['slug']}")
-    raw = input("Use which node? ").strip()
+    raw = input("Use which node? Blank to cancel> ").strip()
+    if not raw:
+        print(f"{YELLOW}Gathering cancelled.{RESET}")
+        return None
     if not raw.isdigit() or not (1 <= int(raw) <= len(nodes)):
         print(f"{RED}Invalid node.{RESET}")
         return None
@@ -385,7 +407,8 @@ def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
                 MenuOption("3", "Combat", target="combat"),
                 MenuOption("4", "Gathering", target="gathering"),
                 MenuOption("5", "Crafting", target="crafting"),
-                MenuOption("6", "Status", lambda: action(lambda: status_screen(con, character_id))),
+                MenuOption("6", "Inventory", lambda: action(lambda: inventory_screen(con, character_id))),
+                MenuOption("7", "Status", lambda: action(lambda: status_screen(con, character_id))),
                 MenuOption("?", "Help", lambda: action(help_screen)),
             ],
         ),

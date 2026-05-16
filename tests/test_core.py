@@ -34,6 +34,15 @@ def test_create_character_writes_inventory_to_sqlite():
     assert current_location(con, cid)["slug"] == "southern_sandoria"
 
 
+def test_inventory_rows_include_kind_for_grouped_ui():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Sorter", "Hume", "Male", "Bastok", "Warrior", None))
+    rows = list_inventory(con, cid)
+    kinds = {row["kind"] for row in rows}
+    assert "weapon" in kinds
+    assert "armor" in kinds
+
+
 def test_character_location_can_be_changed_for_travel():
     con = memory_db()
     cid = create_character(con, CharacterBuild("Walker", "Hume", "Male", "Bastok", "Warrior", None))
