@@ -39,6 +39,7 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 - Placeholder folders for future images and sounds:
   - `assets/images/`
   - `assets/sounds/`
+- SVG placeholder art for hero portrait, map/world, combat, and gathering panels.
 
 ## Engine direction
 

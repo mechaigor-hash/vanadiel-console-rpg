@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 12 - Web placeholder art and combat HUD
+
+- Added SVG placeholder art assets for hero portrait, map/world, combat, and gathering panels.
+- Wired placeholder art into the web layout.
+- Added combat HUD boxes and HP bars for player/enemy during web combat.
+- Updated asset manifest and docs/TODO.
+
 ## Revision 11 - Modular web engine scaffold
 
 - Split browser engine scaffolding into modules under `web/src/engine/`:

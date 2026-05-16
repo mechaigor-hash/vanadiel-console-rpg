@@ -39,7 +39,10 @@ export class AssetManager {
 
 export const defaultManifest = {
   images: {
-    // Example future keys: portrait_hume_male: "assets/images/portrait_hume_male.png"
+    hero: "assets/images/hero-placeholder.svg",
+    map: "assets/images/map-placeholder.svg",
+    combat: "assets/images/combat-placeholder.svg",
+    gathering: "assets/images/gathering-placeholder.svg",
   },
   sounds: {
     // Example future keys: ui_click: "assets/sounds/ui_click.ogg"

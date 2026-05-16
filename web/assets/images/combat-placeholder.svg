@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420">
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#32131d"/><stop offset="1" stop-color="#0b111b"/></linearGradient></defs>
+  <rect width="900" height="420" rx="28" fill="url(#g)"/>
+  <path d="M210 322L350 90l42 75-112 185z" fill="#d8b45d"/>
+  <path d="M690 322L550 90l-42 75 112 185z" fill="#ff6b6b"/>
+  <circle cx="336" cy="128" r="34" fill="#f5d47d"/><circle cx="564" cy="128" r="34" fill="#ff9090"/>
+  <path d="M282 332h336" stroke="#7fe7ff" stroke-width="10" stroke-linecap="round" opacity=".75"/>
+  <text x="52" y="70" fill="#d8b45d" font-size="34" font-family="serif">Battle Stance</text>
+</svg>

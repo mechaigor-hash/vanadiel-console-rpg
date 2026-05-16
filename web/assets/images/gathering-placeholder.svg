@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420">
+  <rect width="900" height="420" rx="28" fill="#071720"/>
+  <path d="M0 295c122-54 220-52 310-20 119 42 214 18 305-22 101-44 191-45 285 4v163H0z" fill="#123f35"/>
+  <path d="M160 250c60-100 128-120 204-55 73 62 119 54 185-3 66-58 130-54 194 25" fill="none" stroke="#7fe7ff" stroke-width="9" opacity=".75"/>
+  <path d="M445 120v166" stroke="#d8b45d" stroke-width="10" stroke-linecap="round"/>
+  <path d="M445 122c-46 22-75 53-86 94 51-2 88-27 110-73z" fill="#8ff0a4"/>
+  <path d="M445 160c48 12 82 42 103 90-56 4-99-18-129-65z" fill="#5fcf7a"/>
+  <text x="52" y="70" fill="#d8b45d" font-size="34" font-family="serif">Gathering Grounds</text>
+</svg>

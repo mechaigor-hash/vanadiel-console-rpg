@@ -118,6 +118,7 @@ function renderWorld() {
   const npcs = content.npcs.filter((n) => n.map_slug === map.slug);
   els.title.textContent = "World";
   els.screen.innerHTML = `
+    <div class="hero-art" style="--art: url('assets/images/map-placeholder.svg')"></div>
     <h2>${map.name}</h2><p>${map.region}${map.water_type ? ` • ${map.water_type} water` : ""}</p>
     <div class="card-grid">
       ${card("NPCs here", npcs.length ? npcs.map((n) => n.name).join(", ") : "No NPCs seeded for this map yet.", ["dialogue"])}
@@ -165,19 +166,26 @@ function combatAction(action) {
 function renderCombat() {
   els.title.textContent = "Combat";
   if (state.combat) {
-    els.screen.innerHTML = `<h2>${state.combat.mob.name}</h2><p>Enemy HP ${Math.max(0, state.combat.hp)} • Your HP ${state.character.hp} MP ${state.character.mp}</p><div class="top-actions"><button data-action="attack">Attack</button><button data-action="cast">Cast</button><button data-action="defend">Defend</button><button data-action="flee">Flee</button></div>`;
+    const enemyMax = state.combat.mob.stats?.hp ?? 20 + state.combat.mob.level * 6;
+    els.screen.innerHTML = `
+      <div class="hero-art" style="--art: url('assets/images/combat-placeholder.svg')"></div>
+      <div class="hud-row">
+        <div class="hud-box"><strong>${state.character.name}</strong>HP ${state.character.hp}/${state.character.stats.hp} • MP ${state.character.mp}/${state.character.stats.mp}<div class="bar"><span style="--value:${Math.max(1, (state.character.hp / state.character.stats.hp) * 100)}%"></span></div></div>
+        <div class="hud-box"><strong>${state.combat.mob.name}</strong>HP ${Math.max(0, state.combat.hp)}/${enemyMax}<div class="bar enemy"><span style="--value:${Math.max(1, (state.combat.hp / enemyMax) * 100)}%"></span></div></div>
+      </div>
+      <div class="top-actions"><button data-action="attack">Attack</button><button data-action="cast">Cast</button><button data-action="defend">Defend</button><button data-action="flee">Flee</button></div>`;
     els.screen.querySelectorAll("[data-action]").forEach((b) => b.addEventListener("click", () => combatAction(b.dataset.action)));
     return;
   }
   const mobs = state.character ? localMobs() : [];
-  els.screen.innerHTML = mobs.length ? `<div class="card-grid">${mobs.map((m) => card(m.name, `Lv${m.level} ${m.family}${m.job ? " / " + m.job : ""}`, [mapName(m.map_slug)], `<button data-fight="${m.slug}">Fight</button>`)).join("")}</div>` : `<p>No local mobs. Travel to a field zone.</p>`;
+  els.screen.innerHTML = `<div class="hero-art" style="--art: url('assets/images/combat-placeholder.svg')"></div>` + (mobs.length ? `<div class="card-grid">${mobs.map((m) => card(m.name, `Lv${m.level} ${m.family}${m.job ? " / " + m.job : ""}`, [mapName(m.map_slug)], `<button data-fight="${m.slug}">Fight</button>`)).join("")}</div>` : `<p>No local mobs. Travel to a field zone.</p>`);
   els.screen.querySelectorAll("[data-fight]").forEach((b) => b.addEventListener("click", () => startCombat(content.mobBySlug[b.dataset.fight])));
 }
 
 function renderGathering() {
   els.title.textContent = "Gathering";
   const nodes = state.character ? localNodes() : [];
-  els.screen.innerHTML = nodes.length ? `<div class="card-grid">${nodes.map((n) => card(n.slug, `Kind: ${n.kind}`, [mapName(n.map_slug)], `<button data-node="${n.slug}">Use Node</button>`)).join("")}</div>` : `<p>No local gathering nodes. Travel to a zone with fishing/mining.</p>`;
+  els.screen.innerHTML = `<div class="hero-art" style="--art: url('assets/images/gathering-placeholder.svg')"></div>` + (nodes.length ? `<div class="card-grid">${nodes.map((n) => card(n.slug, `Kind: ${n.kind}`, [mapName(n.map_slug)], `<button data-node="${n.slug}">Use Node</button>`)).join("")}</div>` : `<p>No local gathering nodes. Travel to a zone with fishing/mining.</p>`);
   els.screen.querySelectorAll("[data-node]").forEach((b) => b.addEventListener("click", () => useNode(content.nodeBySlug[b.dataset.node])));
 }
 function useNode(node) {
