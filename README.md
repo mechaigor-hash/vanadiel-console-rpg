@@ -52,6 +52,12 @@ Bundled starter content now lives in `src/vanadiel_console/data/core_content.jso
 
 The Python seeder can also load another JSON file with the same top-level keys, so future private/mod content can be added without editing code.
 
+## Repository
+
+Planned GitHub visibility: **public**.
+
+Project checklist is also tracked in [`TODO.md`](TODO.md).
+
 ## Checklist
 
 ### Revision 1 foundation
@@ -72,6 +78,8 @@ The Python seeder can also load another JSON file with the same top-level keys, 
 ### Next revisions
 
 - [x] Move seed content into external data packs.
+- [x] Add public project TODO/checklist artifact.
+- [ ] Create public GitHub repository and push commits.
 - [ ] Add content-pack validation with friendly error messages.
 - [ ] Add save-slot selection and better character management.
 - [ ] Add equipment equip/unequip and derived combat stats.
