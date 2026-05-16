@@ -2,11 +2,21 @@ from __future__ import annotations
 
 import os
 import sqlite3
+import sys
 from pathlib import Path
 
-from .db import connect, create_character, init_db, list_inventory
-from .models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
-from .systems import craft, defeat_mob, gather
+if __package__ in {None, ""}:
+    # Allow direct execution:
+    #   python src/vanadiel_console/app.py
+    # Normal package/module execution still uses the relative imports below.
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from vanadiel_console.db import connect, create_character, init_db, list_inventory
+    from vanadiel_console.models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
+    from vanadiel_console.systems import craft, defeat_mob, gather
+else:
+    from .db import connect, create_character, init_db, list_inventory
+    from .models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
+    from .systems import craft, defeat_mob, gather
 
 DB_PATH = Path(os.environ.get("VANADIEL_DB", "vanadiel.sqlite3"))
 
