@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Vanadiel Console RPG",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "vanadiel_console.app",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "VANADIEL_DB": "${workspaceFolder}/vanadiel.sqlite3"
+      },
+      "justMyCode": true
+    }
+  ]
+}
