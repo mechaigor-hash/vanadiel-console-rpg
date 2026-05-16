@@ -1,5 +1,14 @@
 # Revision Log
 
+## Revision 5 - Interactive combat and fishing
+
+- Replaced instant sample combat in the UI with an interactive turn-based combat screen.
+- Added combat actions: attack, cast spell, defend, and flee.
+- Added HP/MP tracking during combat, mob counterattacks/casting, EXP payout, and weighted loot payout on victory.
+- Added reusable combat helpers plus an automated combat runner for tests.
+- Replaced instant fishing menu results with an interactive fishing loop using `reel`, `wait`, and `slacken` tension/progress choices.
+- Added reusable fishing state/turn helpers and tests.
+
 ## Revision 2 - JSON content pack extraction
 
 - Moved starter content into bundled JSON data pack: `src/vanadiel_console/data/core_content.json`.

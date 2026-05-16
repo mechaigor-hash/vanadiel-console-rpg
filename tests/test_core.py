@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from vanadiel_console.db import add_item, connect, create_character, init_db, list_inventory, load_content_pack
 from vanadiel_console.models import CharacterBuild, calculate_stats
-from vanadiel_console.systems import craft, defeat_mob, fishing_nodes_for_water, gather
+from vanadiel_console.systems import auto_combat, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather
 
 
 def memory_db():
@@ -47,6 +47,28 @@ def test_defeat_mob_grants_exp_and_possible_inventory_changes(monkeypatch):
     assert drops
     exp = con.execute("SELECT exp FROM characters WHERE id=?", (cid,)).fetchone()["exp"]
     assert exp == 100
+
+
+def test_interactive_combat_can_defeat_sample_mob(monkeypatch):
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Brawler", "Galka", "Male", "Bastok", "Warrior", "Monk"))
+    monkeypatch.setattr("random.randint", lambda a, b: b)
+    result = auto_combat(con, cid, "forest_hare_l2", ["attack", "attack", "attack", "attack"])
+    assert result.victory is True
+    assert result.exp == 40
+    assert any("attacks" in line for line in result.log)
+
+
+def test_interactive_fishing_can_award_fish(monkeypatch):
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Angler", "Hume", "Female", "Windurst", "Red Mage", None))
+    monkeypatch.setattr("random.randint", lambda a, b: 30 if (a, b) == (18, 30) else a)
+    success, fish_slug, log = fishing_attempt(con, cid, "ronfaure_pond", ["reel", "reel", "reel", "reel"])
+    assert success is True
+    assert fish_slug == "moat_carp"
+    assert any("Caught" in line for line in log)
+    names = {row["slug"] for row in list_inventory(con, cid)}
+    assert "moat_carp" in names
 
 
 def test_gathering_fishing_water_types_and_crafting():

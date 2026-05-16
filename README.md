@@ -36,6 +36,8 @@ pytest
 - SQLite persistence for characters, inventory, key items, gear slots, maps, NPCs, mobs, loot, quests, recipes, and gathering nodes.
 - Extensible seed tables for maps, NPCs, mobs, quests/main missions, crafting, fishing, mining, and resource gathering.
 - Weighted mob loot tables, including a level 5 White Mage Yagudo sample that can drop WHM-flavoured gear/scrolls.
+- Interactive turn-based combat with attack, cast, defend, flee, EXP, and loot payout.
+- Interactive fishing with reel/wait/slacken tension management.
 - Fishing split by water type: freshwater, saltwater, and ice fishing samples.
 
 ## Extending content
@@ -83,7 +85,8 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [ ] Add content-pack validation with friendly error messages.
 - [ ] Add save-slot selection and better character management.
 - [ ] Add equipment equip/unequip and derived combat stats.
-- [ ] Add turn-based combat loop rather than instant sample victories.
+- [x] Add turn-based combat loop rather than instant sample victories.
+- [x] Add interactive fishing tension loop.
 - [ ] Add quest journal progression and completion rewards.
 - [ ] Add nation-specific opening missions.
 - [ ] Add more maps, NPCs, mobs, fish, recipes, mining/logging nodes.

@@ -19,6 +19,8 @@
 - [x] Added crafting foundation.
 - [x] Added mining/resource gathering foundation.
 - [x] Added fishing foundation with freshwater, saltwater, and ice-fishing examples.
+- [x] Added interactive turn-based combat with attack/cast/defend/flee choices.
+- [x] Added interactive fishing with reel/wait/slacken tension management.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
 - [x] Added README with run/test instructions and project checklist.
@@ -37,9 +39,10 @@
 
 ### Gameplay
 
-- [ ] Add proper turn-based combat instead of instant sample victories.
-- [ ] Add HP/MP tracking during combat.
-- [ ] Add job abilities and starter spell casting.
+- [x] Add proper turn-based combat instead of instant sample victories.
+- [x] Add HP/MP tracking during combat.
+- [x] Add starter spell casting in combat.
+- [ ] Add job abilities beyond basic spell casting.
 - [ ] Add equipment equip/unequip flow.
 - [ ] Add derived attack/defense/magic stats from gear.
 - [ ] Add level-up rules and EXP thresholds.
@@ -77,6 +80,7 @@
 
 - [ ] Add tests for content-pack validation.
 - [ ] Add tests for quest progression.
-- [ ] Add tests for combat once implemented.
+- [x] Add tests for combat once implemented.
+- [x] Add tests for interactive fishing once implemented.
 - [ ] Add tests for equipment stat changes.
 - [ ] Add CI once GitHub repo exists.

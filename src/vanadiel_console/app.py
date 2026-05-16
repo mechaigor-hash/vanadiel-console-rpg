@@ -12,11 +12,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from vanadiel_console.db import connect, create_character, init_db, list_inventory
     from vanadiel_console.models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
-    from vanadiel_console.systems import craft, defeat_mob, gather
+    from vanadiel_console.systems import craft, finish_combat_victory, gather, load_mob_combatant, load_player_combatant, resolve_combat_turn, resolve_fishing_turn, start_fishing
 else:
     from .db import connect, create_character, init_db, list_inventory
     from .models import JOBS, NATIONS, RACES, SEXES, CharacterBuild, calculate_stats
-    from .systems import craft, defeat_mob, gather
+    from .systems import craft, finish_combat_victory, gather, load_mob_combatant, load_player_combatant, resolve_combat_turn, resolve_fishing_turn, start_fishing
 
 DB_PATH = Path(os.environ.get("VANADIEL_DB", "vanadiel.sqlite3"))
 
@@ -127,6 +127,90 @@ def browse_world(con: sqlite3.Connection) -> None:
         print(f"  - [{row['quest_type']}] {row['title']}")
 
 
+def print_drops(drops: list[tuple[str, int]]) -> str:
+    if not drops:
+        return "none"
+    names: list[str] = []
+    for slug, qty in drops:
+        names.append(f"{slug} x{qty}")
+    return ", ".join(names)
+
+
+def combat_screen(con: sqlite3.Connection, character_id: int, mob_slug: str) -> None:
+    player = load_player_combatant(con, character_id)
+    mob = load_mob_combatant(con, mob_slug)
+    print(f"\n{RED}A {mob.name} attacks!{RESET}")
+    while player.hp > 0 and mob.hp > 0:
+        print(f"\n{GREEN}{player.name}{RESET} HP {max(0, player.hp)} MP {player.mp}  vs  {RED}{mob.name}{RESET} HP {max(0, mob.hp)} MP {mob.mp}")
+        print("  1. Attack")
+        print("  2. Cast spell")
+        print("  3. Defend")
+        print("  4. Flee")
+        choice = input("> ").strip()
+        if choice == "1":
+            action = "attack"
+        elif choice == "2":
+            action = "cast"
+        elif choice == "3":
+            action = "defend"
+        elif choice == "4":
+            import random
+
+            if random.randint(1, 100) <= 55:
+                print(f"{YELLOW}You escape!{RESET}")
+                return
+            print(f"{RED}Couldn't escape!{RESET}")
+            action = "defend"
+        else:
+            print(f"{RED}Invalid combat choice.{RESET}")
+            continue
+
+        for line in resolve_combat_turn(player, mob, action):
+            print(line)
+
+    if mob.hp <= 0:
+        exp, drops = finish_combat_victory(con, character_id, mob_slug)
+        print(f"{GREEN}Victory!{RESET} EXP +{exp}. Drops: {print_drops(drops)}")
+    else:
+        print(f"{RED}You were knocked out. You wake up back near town, bruised and annoyed.{RESET}")
+
+
+def fishing_screen(con: sqlite3.Connection, character_id: int, node_slug: str) -> None:
+    node = con.execute("SELECT g.slug, g.kind, m.name AS map_name, m.water_type FROM gathering_nodes g JOIN maps m ON m.slug=g.map_slug WHERE g.slug=?", (node_slug,)).fetchone()
+    if node:
+        print(f"\n{CYAN}Fishing at {node['map_name']} ({node['water_type']} water).{RESET}")
+    print("Build progress without snapping the line. Actions: reel / wait / slacken")
+    state = start_fishing(con, node_slug)
+    print(f"Something bites! It feels like {state.fish_name}.")
+    for round_no in range(1, 9):
+        raw = input(f"Round {round_no}> ").strip().lower()
+        if raw in {"r", "reel"}:
+            action = "reel"
+        elif raw in {"w", "wait"}:
+            action = "wait"
+        elif raw in {"s", "slacken", "slack"}:
+            action = "slacken"
+        elif raw in {"q", "quit", "cancel"}:
+            print(f"{YELLOW}You pack away the rod.{RESET}")
+            return
+        else:
+            print(f"{RED}Use reel, wait, slacken, or quit.{RESET}")
+            continue
+        try:
+            line = resolve_fishing_turn(con, character_id, state, action)
+        except ValueError as exc:
+            print(f"{RED}{exc}{RESET}")
+            return
+        print(line)
+        if state.success:
+            print(f"{GREEN}Landed: {state.fish_slug}!{RESET}")
+            return
+        if state.complete:
+            print(f"{RED}Fishing attempt failed.{RESET}")
+            return
+    print(f"{YELLOW}The water goes quiet.{RESET}")
+
+
 def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
     while True:
         clear()
@@ -146,16 +230,15 @@ def adventure_menu(con: sqlite3.Connection, character_id: int) -> None:
             if choice == "1":
                 browse_world(con)
             elif choice == "2":
-                drops = defeat_mob(con, character_id, "yagudo_acolyte_l5")
-                print(f"{GREEN}Victory! Drops:{RESET} " + (", ".join(f"{slug} x{qty}" for slug, qty in drops) or "none"))
+                combat_screen(con, character_id, "yagudo_acolyte_l5")
             elif choice == "3":
                 print(f"{GREEN}Gathered:{RESET} {gather(con, character_id, 'bastok_copper_vein')[0]}")
             elif choice == "4":
-                print(f"{GREEN}Caught:{RESET} {gather(con, character_id, 'ronfaure_pond')[0]}")
+                fishing_screen(con, character_id, "ronfaure_pond")
             elif choice == "5":
-                print(f"{GREEN}Caught:{RESET} {gather(con, character_id, 'bastore_surf')[0]}")
+                fishing_screen(con, character_id, "bastore_surf")
             elif choice == "6":
-                print(f"{GREEN}Caught:{RESET} {gather(con, character_id, 'qufim_ice_hole')[0]}")
+                fishing_screen(con, character_id, "qufim_ice_hole")
             elif choice == "7":
                 print(f"{GREEN}Crafted Bronze Ingot!{RESET}" if craft(con, character_id, "smelt_bronze") else f"{RED}Need 3 Copper Ore.{RESET}")
             elif choice == "0":
