@@ -30,6 +30,12 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 - Clickable local gathering/fishing prototype.
 - Inventory screen grouped by item kind.
 - Database summary screen.
+- Modular engine scaffolding:
+  - `engine/constants.js` - race/job/nation/stat constants
+  - `engine/content.js` - content-pack loader/indexer
+  - `engine/state.js` - game state and save/load helpers
+  - `engine/utils.js` - dice, weighted tables, cards, stat helpers
+  - `engine/assets.js` - image/sound asset manager scaffold
 - Placeholder folders for future images and sounds:
   - `assets/images/`
   - `assets/sounds/`

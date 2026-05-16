@@ -31,6 +31,7 @@
 - [x] Added first HTML/CSS/JavaScript web engine prototype.
 - [x] Added browser UI panels, character creation modal, event log, travel/combat/gathering/inventory/database screens.
 - [x] Added placeholder asset folders for future images and sounds.
+- [x] Split browser engine scaffolding into constants/content/state/utils/assets modules.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -96,9 +97,10 @@
 - [x] Load JSON content pack in browser.
 - [x] Add localStorage save/load.
 - [x] Add visual layout and screen routing.
-- [ ] Split web engine into modules.
-- [ ] Add image asset pipeline and sprite/map placeholders.
-- [ ] Add sound manager and sample UI/combat/fishing sounds.
+- [x] Split web engine into modules.
+- [x] Add image/sound asset manager scaffold.
+- [ ] Add sprite/map placeholder image assets.
+- [ ] Add sample UI/combat/fishing sounds.
 - [ ] Sync web client with SQLite/backend or add export/import bridge.
 
 ### Testing / quality

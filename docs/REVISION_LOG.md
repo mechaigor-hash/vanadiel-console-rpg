@@ -1,5 +1,17 @@
 # Revision Log
 
+## Revision 11 - Modular web engine scaffold
+
+- Split browser engine scaffolding into modules under `web/src/engine/`:
+  - constants
+  - content loading/indexing
+  - state/save/load
+  - utilities
+  - asset manager
+- Added `AssetManager` scaffold for future image preloading and sound playback.
+- Rewired `web/src/engine.js` to import engine modules.
+- Updated web docs and TODO.
+
 ## Revision 10 - HTML web engine prototype
 
 - Added `web/` browser client with HTML/CSS/JavaScript.
