@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vanadiel Console RPG - Web Engine Prototype</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">HTML engine prototype</p>
+          <h1>Vanadiel Console RPG</h1>
+        </div>
+        <div class="top-actions">
+          <button id="newGameBtn">New Character</button>
+          <button id="saveBtn">Save</button>
+          <button id="loadBtn">Load</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <aside class="sidebar panel">
+          <div class="portrait" aria-label="character portrait placeholder">⚔️</div>
+          <h2 id="charName">No Character</h2>
+          <p id="charSummary">Create a character to begin.</p>
+          <div id="statGrid" class="stat-grid"></div>
+          <nav class="nav-stack" aria-label="Game screens">
+            <button data-screen="world" class="active">World</button>
+            <button data-screen="travel">Travel</button>
+            <button data-screen="combat">Combat</button>
+            <button data-screen="gathering">Gathering</button>
+            <button data-screen="inventory">Inventory</button>
+            <button data-screen="content">Database</button>
+          </nav>
+        </aside>
+
+        <section class="stage panel">
+          <div id="screenTitle" class="screen-title">World</div>
+          <div id="screen" class="screen"></div>
+        </section>
+
+        <aside class="log panel">
+          <h2>Event Log</h2>
+          <div id="logFeed" class="log-feed"></div>
+        </aside>
+      </main>
+    </div>
+
+    <template id="characterCreatorTemplate">
+      <div class="modal-backdrop">
+        <form class="modal panel" id="characterForm">
+          <h2>Create Character</h2>
+          <label>Name <input name="name" required value="Adventurer" /></label>
+          <label>Race <select name="race"></select></label>
+          <label>Sex <select name="sex"></select></label>
+          <label>Nation <select name="nation"></select></label>
+          <label>Main Job <select name="mainJob"></select></label>
+          <label>Subjob <select name="subJob"></select></label>
+          <div class="modal-actions">
+            <button type="button" id="cancelCreate">Cancel</button>
+            <button type="submit">Start</button>
+          </div>
+        </form>
+      </div>
+    </template>
+
+    <script type="module" src="src/engine.js"></script>
+  </body>
+</html>

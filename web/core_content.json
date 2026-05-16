@@ -1,0 +1,1692 @@
+{
+  "items": [
+    {
+      "slug": "bronze_sword",
+      "name": "Bronze Sword",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Warrior"
+        ],
+        "damage": 4
+      }
+    },
+    {
+      "slug": "bronze_harness",
+      "name": "Bronze Harness",
+      "kind": "armor",
+      "data": {
+        "slot": "body",
+        "defense": 2
+      }
+    },
+    {
+      "slug": "cesti",
+      "name": "Cesti",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Monk"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "kenpogi",
+      "name": "Kenpogi",
+      "kind": "armor",
+      "data": {
+        "slot": "body",
+        "defense": 1
+      }
+    },
+    {
+      "slug": "ash_staff",
+      "name": "Ash Staff",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "White Mage"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "scroll_cure",
+      "name": "Scroll of Cure",
+      "kind": "scroll",
+      "data": {
+        "spell": "Cure",
+        "jobs": [
+          "White Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "willow_wand",
+      "name": "Willow Wand",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Black Mage"
+        ],
+        "damage": 2
+      }
+    },
+    {
+      "slug": "scroll_stone",
+      "name": "Scroll of Stone",
+      "kind": "scroll",
+      "data": {
+        "spell": "Stone",
+        "jobs": [
+          "Black Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "wax_sword",
+      "name": "Wax Sword",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Red Mage"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "scroll_dia",
+      "name": "Scroll of Dia",
+      "kind": "scroll",
+      "data": {
+        "spell": "Dia",
+        "jobs": [
+          "White Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "bronze_knife",
+      "name": "Bronze Knife",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "jobs": [
+          "Thief"
+        ],
+        "damage": 3
+      }
+    },
+    {
+      "slug": "bandits_vest",
+      "name": "Bandit's Vest",
+      "kind": "armor",
+      "data": {
+        "slot": "body",
+        "defense": 1
+      }
+    },
+    {
+      "slug": "yagudo_feather",
+      "name": "Yagudo Feather",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "beastcoin",
+      "name": "Beastcoin",
+      "kind": "currency",
+      "data": {}
+    },
+    {
+      "slug": "moat_carp",
+      "name": "Moat Carp",
+      "kind": "fish",
+      "data": {
+        "water": "fresh"
+      }
+    },
+    {
+      "slug": "bastore_sardine",
+      "name": "Bastore Sardine",
+      "kind": "fish",
+      "data": {
+        "water": "salt"
+      }
+    },
+    {
+      "slug": "icefish",
+      "name": "Icefish",
+      "kind": "fish",
+      "data": {
+        "water": "ice"
+      }
+    },
+    {
+      "slug": "copper_ore",
+      "name": "Copper Ore",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "bronze_ingot",
+      "name": "Bronze Ingot",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "fire_crystal",
+      "name": "Fire Crystal",
+      "kind": "crystal",
+      "data": {}
+    },
+    {
+      "slug": "earth_crystal",
+      "name": "Earth Crystal",
+      "kind": "crystal",
+      "data": {}
+    },
+    {
+      "slug": "wind_crystal",
+      "name": "Wind Crystal",
+      "kind": "crystal",
+      "data": {}
+    },
+    {
+      "slug": "water_crystal",
+      "name": "Water Crystal",
+      "kind": "crystal",
+      "data": {}
+    },
+    {
+      "slug": "light_crystal",
+      "name": "Light Crystal",
+      "kind": "crystal",
+      "data": {}
+    },
+    {
+      "slug": "rabbit_hide",
+      "name": "Rabbit Hide",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "sheepskin",
+      "name": "Sheepskin",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "bat_wing",
+      "name": "Bat Wing",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "silk_thread",
+      "name": "Silk Thread",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "beehive_chip",
+      "name": "Beehive Chip",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "insect_wing",
+      "name": "Insect Wing",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "goblin_mask",
+      "name": "Goblin Mask",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "goblin_helm",
+      "name": "Goblin Helm",
+      "kind": "armor",
+      "data": {
+        "slot": "head",
+        "defense": 4
+      }
+    },
+    {
+      "slug": "quadav_backplate",
+      "name": "Quadav Backplate",
+      "kind": "material",
+      "data": {}
+    },
+    {
+      "slug": "orcish_axe",
+      "name": "Orcish Axe",
+      "kind": "weapon",
+      "data": {
+        "slot": "main",
+        "damage": 12
+      }
+    },
+    {
+      "slug": "scroll_protect",
+      "name": "Scroll of Protect",
+      "kind": "scroll",
+      "data": {
+        "spell": "Protect",
+        "jobs": [
+          "White Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "scroll_blind",
+      "name": "Scroll of Blind",
+      "kind": "scroll",
+      "data": {
+        "spell": "Blind",
+        "jobs": [
+          "Black Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "scroll_paralyze",
+      "name": "Scroll of Paralyze",
+      "kind": "scroll",
+      "data": {
+        "spell": "Paralyze",
+        "jobs": [
+          "White Mage",
+          "Red Mage"
+        ]
+      }
+    },
+    {
+      "slug": "seal_kindred",
+      "name": "Kindred Seal",
+      "kind": "currency",
+      "data": {}
+    },
+    {
+      "slug": "seal_beastmen",
+      "name": "Beastmen Seal",
+      "kind": "currency",
+      "data": {}
+    }
+  ],
+  "maps": [
+    {
+      "slug": "southern_sandoria_gate",
+      "name": "Southern San d'Oria Gate",
+      "region": "Ronfaure",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "bastok_mines",
+      "name": "Bastok Mines",
+      "region": "Gustaberg",
+      "water_type": null,
+      "resource_nodes": [
+        "mining"
+      ]
+    },
+    {
+      "slug": "windurst_waters",
+      "name": "Windurst Waters",
+      "region": "Sarutabaruta",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "bastore_coast",
+      "name": "Bastore Coast",
+      "region": "Zulkheim",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "qufim_ice_lake",
+      "name": "Qufim Ice Lake",
+      "region": "Qufim",
+      "water_type": "ice",
+      "resource_nodes": [
+        "ice_fishing"
+      ]
+    },
+    {
+      "slug": "northern_sandoria",
+      "name": "Northern San d'Oria",
+      "region": "San d'Oria",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "southern_sandoria",
+      "name": "Southern San d'Oria",
+      "region": "San d'Oria",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "port_sandoria",
+      "name": "Port San d'Oria",
+      "region": "San d'Oria",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "chateau_doraguille",
+      "name": "Chateau d'Oraguille",
+      "region": "San d'Oria",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "bastok_markets",
+      "name": "Bastok Markets",
+      "region": "Bastok",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "bastok_mines_city",
+      "name": "Bastok Mines",
+      "region": "Bastok",
+      "water_type": null,
+      "resource_nodes": [
+        "mining"
+      ]
+    },
+    {
+      "slug": "port_bastok",
+      "name": "Port Bastok",
+      "region": "Bastok",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "metalworks",
+      "name": "Metalworks",
+      "region": "Bastok",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "windurst_walls",
+      "name": "Windurst Walls",
+      "region": "Windurst",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "windurst_woods",
+      "name": "Windurst Woods",
+      "region": "Windurst",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "port_windurst",
+      "name": "Port Windurst",
+      "region": "Windurst",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "heavens_tower",
+      "name": "Heavens Tower",
+      "region": "Windurst",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "west_ronfaure",
+      "name": "West Ronfaure",
+      "region": "Ronfaure",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "east_ronfaure",
+      "name": "East Ronfaure",
+      "region": "Ronfaure",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "north_gustaberg",
+      "name": "North Gustaberg",
+      "region": "Gustaberg",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "mining",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "south_gustaberg",
+      "name": "South Gustaberg",
+      "region": "Gustaberg",
+      "water_type": "salt",
+      "resource_nodes": [
+        "mining",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "east_sarutabaruta",
+      "name": "East Sarutabaruta",
+      "region": "Sarutabaruta",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "harvesting",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "west_sarutabaruta",
+      "name": "West Sarutabaruta",
+      "region": "Sarutabaruta",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "harvesting",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "la_theine_plateau",
+      "name": "La Theine Plateau",
+      "region": "Zulkheim",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "konschtat_highlands",
+      "name": "Konschtat Highlands",
+      "region": "Gustaberg",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "mining",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "tahrongi_canyon",
+      "name": "Tahrongi Canyon",
+      "region": "Aragoneu",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "harvesting"
+      ]
+    },
+    {
+      "slug": "valkurm_dunes",
+      "name": "Valkurm Dunes",
+      "region": "Zulkheim",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "buburimu_peninsula",
+      "name": "Buburimu Peninsula",
+      "region": "Kolshushu",
+      "water_type": "salt",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "qufim_island",
+      "name": "Qufim Island",
+      "region": "Qufim",
+      "water_type": "ice",
+      "resource_nodes": [
+        "fishing",
+        "ice_fishing"
+      ]
+    },
+    {
+      "slug": "garlaige_citadel",
+      "name": "Garlaige Citadel",
+      "region": "Norvallen",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "crawlers_nest",
+      "name": "Crawler's Nest",
+      "region": "Derfland",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "castle_ozstroja",
+      "name": "Castle Oztroja",
+      "region": "Aragoneu",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "beadeaux",
+      "name": "Beadeaux",
+      "region": "Qulun Dome",
+      "water_type": null,
+      "resource_nodes": [
+        "mining"
+      ]
+    },
+    {
+      "slug": "davoi",
+      "name": "Davoi",
+      "region": "Norvallen",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "bastok_markets_s",
+      "name": "Bastok Markets (S)",
+      "region": "Crystal War - Bastok",
+      "water_type": null,
+      "resource_nodes": []
+    },
+    {
+      "slug": "southern_sandoria_s",
+      "name": "Southern San d'Oria (S)",
+      "region": "Crystal War - San d'Oria",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "windurst_waters_s",
+      "name": "Windurst Waters (S)",
+      "region": "Crystal War - Windurst",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "fishing"
+      ]
+    },
+    {
+      "slug": "east_ronfaure_s",
+      "name": "East Ronfaure (S)",
+      "region": "Crystal War - Ronfaure",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "north_gustaberg_s",
+      "name": "North Gustaberg (S)",
+      "region": "Crystal War - Gustaberg",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "mining",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "jugner_forest_s",
+      "name": "Jugner Forest (S)",
+      "region": "Crystal War - Norvallen",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "logging",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "pashhow_marshlands_s",
+      "name": "Pashhow Marshlands (S)",
+      "region": "Crystal War - Derfland",
+      "water_type": "fresh",
+      "resource_nodes": [
+        "harvesting",
+        "fishing"
+      ]
+    },
+    {
+      "slug": "meriphataud_mountains_s",
+      "name": "Meriphataud Mountains (S)",
+      "region": "Crystal War - Aragoneu",
+      "water_type": null,
+      "resource_nodes": [
+        "harvesting"
+      ]
+    }
+  ],
+  "npcs": [
+    {
+      "slug": "gate_guard_aile",
+      "name": "Ailevia",
+      "map_slug": "southern_sandoria_gate",
+      "dialogue": "Keep your weapon sharp and your eyes sharper."
+    },
+    {
+      "slug": "miner_desk",
+      "name": "Hungry Miner",
+      "map_slug": "bastok_mines",
+      "dialogue": "Bring me ore and I'll teach you the bones of smithing."
+    },
+    {
+      "slug": "trion",
+      "name": "Trion",
+      "map_slug": "chateau_doraguille",
+      "dialogue": "A knight must serve more than pride."
+    },
+    {
+      "slug": "pieuje",
+      "name": "Pieuje",
+      "map_slug": "chateau_doraguille",
+      "dialogue": "Faith and duty bind the kingdom."
+    },
+    {
+      "slug": "curilla",
+      "name": "Curilla",
+      "map_slug": "northern_sandoria",
+      "dialogue": "Keep your stance firm. Ronfaure teaches quickly."
+    },
+    {
+      "slug": "halver",
+      "name": "Halver",
+      "map_slug": "chateau_doraguille",
+      "dialogue": "State your business with the royal house."
+    },
+    {
+      "slug": "president_karst",
+      "name": "President Karst",
+      "map_slug": "metalworks",
+      "dialogue": "Bastok advances by industry and resolve."
+    },
+    {
+      "slug": "cid",
+      "name": "Cid",
+      "map_slug": "metalworks",
+      "dialogue": "If it breaks, build it stronger."
+    },
+    {
+      "slug": "naji",
+      "name": "Naji",
+      "map_slug": "bastok_markets",
+      "dialogue": "The guards always need another steady sword."
+    },
+    {
+      "slug": "ayame",
+      "name": "Ayame",
+      "map_slug": "bastok_markets",
+      "dialogue": "Discipline turns motion into purpose."
+    },
+    {
+      "slug": "zeid",
+      "name": "Zeid",
+      "map_slug": "bastok_mines_city",
+      "dialogue": "Power without control becomes a chain."
+    },
+    {
+      "slug": "star_sybil",
+      "name": "Star Sybil",
+      "map_slug": "heavens_tower",
+      "dialogue": "The stars whisper of danger and choice."
+    },
+    {
+      "slug": "ajido_marujido",
+      "name": "Ajido-Marujido",
+      "map_slug": "windurst_walls",
+      "dialogue": "Knowledge hates locked doors. So do I."
+    },
+    {
+      "slug": "apururu",
+      "name": "Apururu",
+      "map_slug": "windurst_walls",
+      "dialogue": "Automatons and adventurers both need maintenance."
+    },
+    {
+      "slug": "shantotto",
+      "name": "Shantotto",
+      "map_slug": "windurst_walls",
+      "dialogue": "Ohohoho! Try not to explode before becoming useful."
+    },
+    {
+      "slug": "ronfaure_angler",
+      "name": "Ronfaure Angler",
+      "map_slug": "west_ronfaure",
+      "dialogue": "Freshwater fish tug softer than sea fish. Do not panic."
+    },
+    {
+      "slug": "crystal_war_scout",
+      "name": "Crystal War Scout",
+      "map_slug": "jugner_forest_s",
+      "dialogue": "This is the past. Beastman patrols move like armies here."
+    }
+  ],
+  "quests": [
+    {
+      "slug": "first_steps",
+      "title": "First Steps Outside the Gate",
+      "quest_type": "main",
+      "start_npc_slug": "gate_guard_aile",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "defeat",
+          "mob_family": "Yagudo",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 100,
+        "items": {
+          "beastcoin": 1
+        }
+      }
+    },
+    {
+      "slug": "ore_for_the_miner",
+      "title": "Ore for the Miner",
+      "quest_type": "side",
+      "start_npc_slug": "miner_desk",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "gather",
+          "item": "copper_ore",
+          "count": 2
+        }
+      ],
+      "rewards": {
+        "items": {
+          "bronze_ingot": 1
+        }
+      }
+    }
+  ],
+  "mobs": [
+    {
+      "slug": "yagudo_acolyte_l5",
+      "name": "Yagudo Acolyte",
+      "family": "Yagudo",
+      "job": "White Mage",
+      "level": 5,
+      "map_slug": "southern_sandoria_gate",
+      "stats": {
+        "hp": 42,
+        "mp": 28
+      }
+    },
+    {
+      "slug": "forest_hare_l2",
+      "name": "Forest Hare",
+      "family": "Beast",
+      "job": null,
+      "level": 2,
+      "map_slug": "southern_sandoria_gate",
+      "stats": {
+        "hp": 24
+      }
+    },
+    {
+      "slug": "wild_rabbit_l1",
+      "name": "Wild Rabbit",
+      "family": "Rabbit",
+      "job": null,
+      "level": 1,
+      "map_slug": "west_ronfaure",
+      "stats": {
+        "hp": 18
+      }
+    },
+    {
+      "slug": "tunnel_worm_l1",
+      "name": "Tunnel Worm",
+      "family": "Worm",
+      "job": null,
+      "level": 1,
+      "map_slug": "east_ronfaure",
+      "stats": {
+        "hp": 16
+      }
+    },
+    {
+      "slug": "forest_hare_l3",
+      "name": "Forest Hare",
+      "family": "Rabbit",
+      "job": null,
+      "level": 3,
+      "map_slug": "east_ronfaure",
+      "stats": {
+        "hp": 28
+      }
+    },
+    {
+      "slug": "orcish_fodder_l5",
+      "name": "Orcish Fodder",
+      "family": "Orc",
+      "job": "Warrior",
+      "level": 5,
+      "map_slug": "west_ronfaure",
+      "stats": {
+        "hp": 46
+      }
+    },
+    {
+      "slug": "orcish_mesmerizer_l7",
+      "name": "Orcish Mesmerizer",
+      "family": "Orc",
+      "job": "Black Mage",
+      "level": 7,
+      "map_slug": "east_ronfaure",
+      "stats": {
+        "hp": 55,
+        "mp": 35
+      }
+    },
+    {
+      "slug": "orcish_cursemaker_l18",
+      "name": "Orcish Cursemaker",
+      "family": "Orc",
+      "job": "Black Mage",
+      "level": 18,
+      "map_slug": "davoi",
+      "stats": {
+        "hp": 150,
+        "mp": 80,
+        "int": 25
+      }
+    },
+    {
+      "slug": "huge_hornet_l1",
+      "name": "Huge Hornet",
+      "family": "Bee",
+      "job": null,
+      "level": 1,
+      "map_slug": "south_gustaberg",
+      "stats": {
+        "hp": 14
+      }
+    },
+    {
+      "slug": "stone_eater_l2",
+      "name": "Stone Eater",
+      "family": "Worm",
+      "job": null,
+      "level": 2,
+      "map_slug": "north_gustaberg",
+      "stats": {
+        "hp": 22
+      }
+    },
+    {
+      "slug": "goblin_thug_l6",
+      "name": "Goblin Thug",
+      "family": "Goblin",
+      "job": "Thief",
+      "level": 6,
+      "map_slug": "south_gustaberg",
+      "stats": {
+        "hp": 48
+      }
+    },
+    {
+      "slug": "quadav_recruit_l8",
+      "name": "Quadav Recruit",
+      "family": "Quadav",
+      "job": "Warrior",
+      "level": 8,
+      "map_slug": "south_gustaberg",
+      "stats": {
+        "hp": 70
+      }
+    },
+    {
+      "slug": "amethyst_quadav_l20",
+      "name": "Amethyst Quadav",
+      "family": "Quadav",
+      "job": "White Mage",
+      "level": 20,
+      "map_slug": "beadeaux",
+      "stats": {
+        "hp": 165,
+        "mp": 90,
+        "mnd": 28
+      }
+    },
+    {
+      "slug": "tiny_mandragora_l1",
+      "name": "Tiny Mandragora",
+      "family": "Mandragora",
+      "job": null,
+      "level": 1,
+      "map_slug": "west_sarutabaruta",
+      "stats": {
+        "hp": 15
+      }
+    },
+    {
+      "slug": "mandragora_l3",
+      "name": "Mandragora",
+      "family": "Mandragora",
+      "job": null,
+      "level": 3,
+      "map_slug": "east_sarutabaruta",
+      "stats": {
+        "hp": 26
+      }
+    },
+    {
+      "slug": "crawler_l5",
+      "name": "Crawler",
+      "family": "Crawler",
+      "job": null,
+      "level": 5,
+      "map_slug": "west_sarutabaruta",
+      "stats": {
+        "hp": 45
+      }
+    },
+    {
+      "slug": "yagudo_initiate_l7",
+      "name": "Yagudo Initiate",
+      "family": "Yagudo",
+      "job": "Monk",
+      "level": 7,
+      "map_slug": "east_sarutabaruta",
+      "stats": {
+        "hp": 62
+      }
+    },
+    {
+      "slug": "yagudo_scribe_l8",
+      "name": "Yagudo Scribe",
+      "family": "Yagudo",
+      "job": "Black Mage",
+      "level": 8,
+      "map_slug": "west_sarutabaruta",
+      "stats": {
+        "hp": 58,
+        "mp": 44
+      }
+    },
+    {
+      "slug": "yagudo_priest_l22",
+      "name": "Yagudo Priest",
+      "family": "Yagudo",
+      "job": "White Mage",
+      "level": 22,
+      "map_slug": "castle_ozstroja",
+      "stats": {
+        "hp": 175,
+        "mp": 110,
+        "mnd": 30
+      }
+    },
+    {
+      "slug": "hill_lizard_l16",
+      "name": "Hill Lizard",
+      "family": "Lizard",
+      "job": null,
+      "level": 16,
+      "map_slug": "valkurm_dunes",
+      "stats": {
+        "hp": 110
+      }
+    },
+    {
+      "slug": "snipper_l20",
+      "name": "Snipper",
+      "family": "Crab",
+      "job": null,
+      "level": 20,
+      "map_slug": "valkurm_dunes",
+      "stats": {
+        "hp": 155,
+        "vit": 28
+      }
+    },
+    {
+      "slug": "damselfly_l21",
+      "name": "Damselfly",
+      "family": "Fly",
+      "job": null,
+      "level": 21,
+      "map_slug": "valkurm_dunes",
+      "stats": {
+        "hp": 145,
+        "agi": 28
+      }
+    },
+    {
+      "slug": "goblin_smithy_l18",
+      "name": "Goblin Smithy",
+      "family": "Goblin",
+      "job": "Warrior",
+      "level": 18,
+      "map_slug": "valkurm_dunes",
+      "stats": {
+        "hp": 145,
+        "str": 25
+      }
+    },
+    {
+      "slug": "land_worm_l26",
+      "name": "Land Worm",
+      "family": "Worm",
+      "job": null,
+      "level": 26,
+      "map_slug": "qufim_island",
+      "stats": {
+        "hp": 210
+      }
+    },
+    {
+      "slug": "clipper_l28",
+      "name": "Clipper",
+      "family": "Crab",
+      "job": null,
+      "level": 28,
+      "map_slug": "qufim_island",
+      "stats": {
+        "hp": 250,
+        "vit": 36
+      }
+    },
+    {
+      "slug": "dancing_weapon_l29",
+      "name": "Dancing Weapon",
+      "family": "Evil Weapon",
+      "job": "Red Mage",
+      "level": 29,
+      "map_slug": "qufim_island",
+      "stats": {
+        "hp": 240,
+        "mp": 80
+      }
+    },
+    {
+      "slug": "acrophies_l33",
+      "name": "Acrophies",
+      "family": "Leech",
+      "job": null,
+      "level": 33,
+      "map_slug": "qufim_island",
+      "stats": {
+        "hp": 300
+      }
+    },
+    {
+      "slug": "soldier_crawler_l40",
+      "name": "Soldier Crawler",
+      "family": "Crawler",
+      "job": null,
+      "level": 40,
+      "map_slug": "crawlers_nest",
+      "stats": {
+        "hp": 430
+      }
+    },
+    {
+      "slug": "orcish_champion_l60",
+      "name": "Orcish Champion",
+      "family": "Orc",
+      "job": "Warrior",
+      "level": 60,
+      "map_slug": "davoi",
+      "stats": {
+        "hp": 1050,
+        "str": 70
+      }
+    },
+    {
+      "slug": "yagudo_conductor_l63",
+      "name": "Yagudo Conductor",
+      "family": "Yagudo",
+      "job": "Bard",
+      "level": 63,
+      "map_slug": "castle_ozstroja",
+      "stats": {
+        "hp": 900,
+        "mp": 260
+      }
+    },
+    {
+      "slug": "sapphire_quadav_l65",
+      "name": "Sapphire Quadav",
+      "family": "Quadav",
+      "job": "Black Mage",
+      "level": 65,
+      "map_slug": "beadeaux",
+      "stats": {
+        "hp": 880,
+        "mp": 420,
+        "int": 72
+      }
+    },
+    {
+      "slug": "campaign_orc_l72",
+      "name": "Orcish Veteran",
+      "family": "Orc",
+      "job": "Warrior",
+      "level": 72,
+      "map_slug": "jugner_forest_s",
+      "stats": {
+        "hp": 1450,
+        "str": 84
+      }
+    },
+    {
+      "slug": "campaign_quadav_l72",
+      "name": "Quadav Veteran",
+      "family": "Quadav",
+      "job": "Paladin",
+      "level": 72,
+      "map_slug": "pashhow_marshlands_s",
+      "stats": {
+        "hp": 1550,
+        "mp": 180,
+        "vit": 86
+      }
+    },
+    {
+      "slug": "campaign_yagudo_l72",
+      "name": "Yagudo Veteran",
+      "family": "Yagudo",
+      "job": "White Mage",
+      "level": 72,
+      "map_slug": "meriphataud_mountains_s",
+      "stats": {
+        "hp": 1250,
+        "mp": 520,
+        "mnd": 88
+      }
+    }
+  ],
+  "loot": [
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "ash_staff",
+      "weight": 20,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "scroll_cure",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "yagudo_feather",
+      "weight": 50,
+      "min_qty": 1,
+      "max_qty": 2
+    },
+    {
+      "mob_slug": "yagudo_acolyte_l5",
+      "item_slug": "beastcoin",
+      "weight": 30,
+      "min_qty": 1,
+      "max_qty": 3
+    },
+    {
+      "mob_slug": "forest_hare_l2",
+      "item_slug": "beastcoin",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "wild_rabbit_l1",
+      "item_slug": "rabbit_hide",
+      "weight": 35,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "wild_rabbit_l1",
+      "item_slug": "earth_crystal",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "forest_hare_l3",
+      "item_slug": "rabbit_hide",
+      "weight": 35,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "forest_hare_l3",
+      "item_slug": "earth_crystal",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "tunnel_worm_l1",
+      "item_slug": "earth_crystal",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "orcish_fodder_l5",
+      "item_slug": "beastcoin",
+      "weight": 30,
+      "min_qty": 1,
+      "max_qty": 2
+    },
+    {
+      "mob_slug": "orcish_fodder_l5",
+      "item_slug": "orcish_axe",
+      "weight": 8,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "orcish_fodder_l5",
+      "item_slug": "seal_beastmen",
+      "weight": 5,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "orcish_mesmerizer_l7",
+      "item_slug": "scroll_blind",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "orcish_cursemaker_l18",
+      "item_slug": "scroll_blind",
+      "weight": 15,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "orcish_cursemaker_l18",
+      "item_slug": "beastcoin",
+      "weight": 35,
+      "min_qty": 1,
+      "max_qty": 3
+    },
+    {
+      "mob_slug": "huge_hornet_l1",
+      "item_slug": "beehive_chip",
+      "weight": 20,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "stone_eater_l2",
+      "item_slug": "earth_crystal",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "goblin_thug_l6",
+      "item_slug": "goblin_mask",
+      "weight": 18,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "quadav_recruit_l8",
+      "item_slug": "quadav_backplate",
+      "weight": 28,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "quadav_recruit_l8",
+      "item_slug": "beastcoin",
+      "weight": 35,
+      "min_qty": 1,
+      "max_qty": 2
+    },
+    {
+      "mob_slug": "amethyst_quadav_l20",
+      "item_slug": "scroll_protect",
+      "weight": 15,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "amethyst_quadav_l20",
+      "item_slug": "quadav_backplate",
+      "weight": 35,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "tiny_mandragora_l1",
+      "item_slug": "wind_crystal",
+      "weight": 8,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "mandragora_l3",
+      "item_slug": "wind_crystal",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "crawler_l5",
+      "item_slug": "silk_thread",
+      "weight": 25,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "crawler_l5",
+      "item_slug": "earth_crystal",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_initiate_l7",
+      "item_slug": "yagudo_feather",
+      "weight": 40,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_scribe_l8",
+      "item_slug": "scroll_blind",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_priest_l22",
+      "item_slug": "scroll_paralyze",
+      "weight": 15,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_priest_l22",
+      "item_slug": "yagudo_feather",
+      "weight": 45,
+      "min_qty": 1,
+      "max_qty": 2
+    },
+    {
+      "mob_slug": "hill_lizard_l16",
+      "item_slug": "earth_crystal",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "snipper_l20",
+      "item_slug": "water_crystal",
+      "weight": 15,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "damselfly_l21",
+      "item_slug": "insect_wing",
+      "weight": 25,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "goblin_smithy_l18",
+      "item_slug": "goblin_mask",
+      "weight": 25,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "goblin_smithy_l18",
+      "item_slug": "goblin_helm",
+      "weight": 8,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "goblin_smithy_l18",
+      "item_slug": "fire_crystal",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "land_worm_l26",
+      "item_slug": "earth_crystal",
+      "weight": 18,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "clipper_l28",
+      "item_slug": "water_crystal",
+      "weight": 18,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "dancing_weapon_l29",
+      "item_slug": "light_crystal",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "acrophies_l33",
+      "item_slug": "water_crystal",
+      "weight": 18,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "soldier_crawler_l40",
+      "item_slug": "silk_thread",
+      "weight": 35,
+      "min_qty": 1,
+      "max_qty": 3
+    },
+    {
+      "mob_slug": "orcish_champion_l60",
+      "item_slug": "seal_kindred",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "yagudo_conductor_l63",
+      "item_slug": "seal_kindred",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "sapphire_quadav_l65",
+      "item_slug": "seal_kindred",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "campaign_orc_l72",
+      "item_slug": "seal_kindred",
+      "weight": 20,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "campaign_quadav_l72",
+      "item_slug": "seal_kindred",
+      "weight": 20,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "campaign_yagudo_l72",
+      "item_slug": "seal_kindred",
+      "weight": 20,
+      "min_qty": 1,
+      "max_qty": 1
+    }
+  ],
+  "recipes": [
+    {
+      "slug": "smelt_bronze",
+      "craft": "Smithing",
+      "result_item_slug": "bronze_ingot",
+      "skill_required": 0,
+      "ingredients": {
+        "copper_ore": 3
+      }
+    }
+  ],
+  "gathering": [
+    {
+      "slug": "bastok_copper_vein",
+      "map_slug": "bastok_mines",
+      "kind": "mining",
+      "loot_table": [
+        {
+          "item": "copper_ore",
+          "weight": 80
+        },
+        {
+          "item": "beastcoin",
+          "weight": 5
+        }
+      ]
+    },
+    {
+      "slug": "ronfaure_pond",
+      "map_slug": "southern_sandoria_gate",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "moat_carp",
+          "weight": 70
+        }
+      ]
+    },
+    {
+      "slug": "bastore_surf",
+      "map_slug": "bastore_coast",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "bastore_sardine",
+          "weight": 75
+        }
+      ]
+    },
+    {
+      "slug": "qufim_ice_hole",
+      "map_slug": "qufim_ice_lake",
+      "kind": "ice_fishing",
+      "loot_table": [
+        {
+          "item": "icefish",
+          "weight": 75
+        }
+      ]
+    },
+    {
+      "slug": "ronfaure_stream",
+      "map_slug": "west_ronfaure",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "moat_carp",
+          "weight": 60
+        }
+      ]
+    },
+    {
+      "slug": "port_sandoria_pier",
+      "map_slug": "port_sandoria",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "bastore_sardine",
+          "weight": 45
+        },
+        {
+          "item": "moat_carp",
+          "weight": 15
+        }
+      ]
+    },
+    {
+      "slug": "gustaberg_vein",
+      "map_slug": "north_gustaberg",
+      "kind": "mining",
+      "loot_table": [
+        {
+          "item": "copper_ore",
+          "weight": 85
+        },
+        {
+          "item": "earth_crystal",
+          "weight": 8
+        }
+      ]
+    }
+  ]
+}

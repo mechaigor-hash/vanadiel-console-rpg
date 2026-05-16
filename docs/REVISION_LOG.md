@@ -1,5 +1,16 @@
 # Revision Log
 
+## Revision 10 - HTML web engine prototype
+
+- Added `web/` browser client with HTML/CSS/JavaScript.
+- Added a three-panel game layout: character/sidebar, main stage, event log.
+- Added character creation modal using the same race/nation/job stat logic as the Python prototype.
+- Added browser localStorage save/load.
+- Added web screens for World, Travel, Combat, Gathering, Inventory, and Database summary.
+- Web client loads `web/core_content.json`, copied from the Python content pack.
+- Added placeholder asset folders for future images and sounds.
+- Added web README and root README run instructions.
+
 ## Revision 9 - Inventory UI and safer local prompts
 
 - Added Inventory screen grouped by item kind.

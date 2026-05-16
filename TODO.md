@@ -28,6 +28,9 @@
 - [x] Added Status and Help screens.
 - [x] Improved Travel menu by grouping destinations by region.
 - [x] Added grouped Inventory screen.
+- [x] Added first HTML/CSS/JavaScript web engine prototype.
+- [x] Added browser UI panels, character creation modal, event log, travel/combat/gathering/inventory/database screens.
+- [x] Added placeholder asset folders for future images and sounds.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -78,6 +81,7 @@
 
 ### UI / polish
 
+- [x] Add first HTML/CSS web UI prototype.
 - [ ] Add save-slot/character-management screen.
 - [x] Add better inventory screens grouped by item type.
 - [x] Add basic map/location browser menu.
@@ -85,6 +89,17 @@
 - [ ] Add NPC interaction menu.
 - [x] Add help screen explaining commands/systems.
 - [ ] Add terminal-width-aware layout.
+
+### Web engine
+
+- [x] Create `web/` client with HTML/CSS/JS.
+- [x] Load JSON content pack in browser.
+- [x] Add localStorage save/load.
+- [x] Add visual layout and screen routing.
+- [ ] Split web engine into modules.
+- [ ] Add image asset pipeline and sprite/map placeholders.
+- [ ] Add sound manager and sample UI/combat/fishing sounds.
+- [ ] Sync web client with SQLite/backend or add export/import bridge.
 
 ### Testing / quality
 

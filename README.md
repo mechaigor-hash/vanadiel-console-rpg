@@ -4,6 +4,8 @@ Single-player Python console RPG prototype inspired by classic Final Fantasy XI-
 
 ## Run
 
+### Python console version
+
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
@@ -19,6 +21,16 @@ PYTHONPATH=src python3 -m vanadiel_console.app
 
 The game creates `vanadiel.sqlite3` in the current directory unless `VANADIEL_DB=/path/file.sqlite3` is set.
 
+### HTML web engine prototype
+
+```bash
+python3 -m http.server 8000 -d web
+```
+
+Then open <http://localhost:8000>.
+
+See [`web/README.md`](web/README.md) for the web engine notes.
+
 ## Test
 
 ```bash
@@ -32,6 +44,7 @@ pytest
 - Text-GUI screen navigator with Main / World / Travel / Combat / Gathering / Crafting menus, plus back/home/quit controls.
 - Status and Help screens for quick orientation.
 - Inventory screen grouped by item kind.
+- HTML/CSS/JavaScript web engine prototype with character creation, travel, combat, gathering, inventory, save/load, and content database views.
 - Region-grouped travel picker so the map list is less painful to navigate.
 - Character creation with race, sex, starting nation, main job, and optional subjob.
 - Starting races: Hume, Elvaan, Tarutaru, Mithra, Galka.
