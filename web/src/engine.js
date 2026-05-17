@@ -340,6 +340,49 @@ function startCombat(mob) {
 }
 function playerDamage() { return Math.max(1, state.character.stats.str + Math.floor(state.character.stats.dex / 2) + gearAttackBonus() + roll(0, 3) - 4); }
 function mobDamage() { return Math.max(1, (state.combat.mob.stats?.str ?? 5 + state.combat.mob.level) + roll(0, 3) - Math.floor((state.character.stats.vit + gearDefenseBonus()) / 2)); }
+function jobAbilityName() {
+  const names = { Warrior: "Mighty Strike", Monk: "Chakra", Thief: "Sneak Attack", White Mage: "Arcane Burst", Black Mage: "Arcane Burst", Red Mage: "Arcane Burst" };
+  return names[state.character?.mainJob] ?? "Improvise";
+}
+function useJobAbility() {
+  const job = state.character.mainJob;
+  const stats = state.character.stats;
+  const mob = state.combat.mob;
+  if (job === "Warrior") {
+    const dmg = Math.max(2, stats.str + state.character.level + roll(2, 6) - Math.floor((mob.stats?.vit ?? 4 + mob.level) / 3));
+    state.combat.hp -= dmg;
+    addLog(`You use Mighty Strike for ${dmg}.`);
+    assets.play("combat_hit");
+    return;
+  }
+  if (job === "Monk") {
+    const healed = Math.max(4, stats.vit + state.character.level);
+    state.character.hp = Math.min(stats.hp, state.character.hp + healed);
+    addLog(`You use Chakra and recover ${healed} HP.`);
+    assets.play("ui_confirm");
+    return;
+  }
+  if (job === "Thief") {
+    const dmg = Math.max(2, stats.dex + Math.floor(stats.agi / 2) + roll(1, 6) - Math.floor((mob.stats?.agi ?? 4 + mob.level) / 3));
+    state.combat.hp -= dmg;
+    addLog(`You use Sneak Attack for ${dmg}.`);
+    assets.play("combat_hit");
+    return;
+  }
+  if (["White Mage", "Black Mage", "Red Mage"].includes(job)) {
+    if (state.character.mp < 3) { addLog("You focus, but lack MP for Arcane Burst."); return; }
+    state.character.mp -= 3;
+    const dmg = Math.max(3, stats.int + Math.floor(stats.mnd / 2) + roll(2, 6) - Math.floor((mob.stats?.mnd ?? 4 + mob.level) / 4));
+    state.combat.hp -= dmg;
+    addLog(`You use Arcane Burst for ${dmg}. (-3 MP)`);
+    assets.play("spell_cast");
+    return;
+  }
+  const dmg = Math.max(1, stats.str + roll(1, 3) - Math.floor((mob.stats?.vit ?? 4 + mob.level) / 3));
+  state.combat.hp -= dmg;
+  addLog(`You improvise for ${dmg}.`);
+  assets.play("combat_hit");
+}
 function combatAction(action) {
   if (!state.combat) return;
   if (action === "attack") { const dmg = playerDamage(); state.combat.hp -= dmg; addLog(`You hit ${state.combat.mob.name} for ${dmg}.`); assets.play("combat_hit"); }
@@ -347,6 +390,7 @@ function combatAction(action) {
     if (state.character.mp < 4) addLog("Not enough MP.");
     else { state.character.mp -= 4; const dmg = Math.max(2, Math.floor(state.character.stats.int / 2) + roll(1, 6)); state.combat.hp -= dmg; addLog(`You cast for ${dmg}.`); assets.play("spell_cast"); }
   }
+  if (action === "ability") useJobAbility();
   if (action === "defend") addLog("You brace for impact.");
   if (action === "flee") { if (roll(1, 100) <= 55) { addLog("You escaped."); assets.play("ui_cancel"); state.combat = null; return render(); } addLog("Couldn't escape!"); }
   if (state.combat.hp <= 0) { state.character.exp += state.combat.mob.level * 20; updateQuestProgress("defeat", state.combat.mob.family); addLog(`${state.combat.mob.name} defeated! EXP +${state.combat.mob.level * 20}.`); state.combat = null; return render(); }
@@ -366,7 +410,7 @@ function renderCombat() {
         <div class="hud-box"><strong>${state.character.name}</strong>HP ${state.character.hp}/${state.character.stats.hp} • MP ${state.character.mp}/${state.character.stats.mp}<div class="bar"><span style="--value:${Math.max(1, (state.character.hp / state.character.stats.hp) * 100)}%"></span></div></div>
         <div class="hud-box"><strong>${state.combat.mob.name}</strong>HP ${Math.max(0, state.combat.hp)}/${enemyMax}<div class="bar enemy"><span style="--value:${Math.max(1, (state.combat.hp / enemyMax) * 100)}%"></span></div></div>
       </div>
-      <div class="top-actions"><button data-action="attack">Attack</button><button data-action="cast">Cast</button><button data-action="defend">Defend</button><button data-action="flee">Flee</button></div>`;
+      <div class="top-actions"><button data-action="attack">Attack</button><button data-action="cast">Cast</button><button data-action="ability">${jobAbilityName()}</button><button data-action="defend">Defend</button><button data-action="flee">Flee</button></div>`;
     els.screen.querySelectorAll("[data-action]").forEach((b) => b.addEventListener("click", () => combatAction(b.dataset.action)));
     return;
   }

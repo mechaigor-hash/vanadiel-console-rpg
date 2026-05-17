@@ -1,5 +1,11 @@
 # Revision Log
 
+## Revision 28 - Web job ability combat actions
+
+- Added a web combat Job Ability button that labels itself from the character's main job.
+- Mirrored the starter ability set into the browser combat flow: Warrior Mighty Strike, Monk Chakra, Thief Sneak Attack, caster Arcane Burst, and fallback improvisation.
+- Abilities now play matching combat/spell/confirm feedback and interact with the existing web combat HP/MP HUD.
+
 ## Revision 27 - Nation opening missions
 
 - Added first-pass nation opening missions for San d'Oria, Bastok, and Windurst.
