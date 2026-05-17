@@ -1,7 +1,7 @@
 import { AssetManager, defaultManifest } from "./engine/assets.js";
 import { loadContentPack } from "./engine/content.js";
 import { JOBS, NATIONS, RACES, STARTING_GEAR, STATS } from "./engine/constants.js";
-import { loadGame, saveGame, state } from "./engine/state.js";
+import { applySave, loadGame, saveGame, serializableState, state } from "./engine/state.js";
 import { addStats, card, roll, slugify, weighted } from "./engine/utils.js";
 
 const els = {
@@ -69,6 +69,35 @@ function load() {
   if (!loadGame()) return addLog("No browser save found.");
   addLog("Game loaded.");
   render();
+}
+
+function exportSave() {
+  if (!state.character) return addLog("Create or load a character before exporting.");
+  const json = JSON.stringify(serializableState(), null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `vanadiel-save-${slugify(state.character.name)}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+  addLog("Exported portable JSON save.");
+  assets.play("ui_confirm");
+}
+
+async function importSave(file) {
+  if (!file) return;
+  try {
+    const save = JSON.parse(await file.text());
+    applySave(save);
+    saveGame();
+    addLog(`Imported save${state.character ? ` for ${state.character.name}` : ""}.`);
+    assets.play("ui_confirm");
+    render();
+  } catch (error) {
+    addLog(`Import failed: ${error.message}`);
+    assets.play("ui_cancel");
+  }
 }
 
 function openCreator() {
@@ -462,6 +491,9 @@ async function boot() {
   document.querySelector("#newGameBtn").addEventListener("click", openCreator);
   document.querySelector("#saveBtn").addEventListener("click", save);
   document.querySelector("#loadBtn").addEventListener("click", load);
+  document.querySelector("#exportBtn").addEventListener("click", exportSave);
+  document.querySelector("#importBtn").addEventListener("click", () => document.querySelector("#importInput").click());
+  document.querySelector("#importInput").addEventListener("change", (event) => importSave(event.target.files[0]));
   document.querySelectorAll("[data-screen]").forEach((btn) => btn.addEventListener("click", () => setScreen(btn.dataset.screen)));
   addLog("Web engine loaded. Modular HTML/CSS/JS shell online.");
   render();

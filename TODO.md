@@ -40,6 +40,7 @@
 - [x] Added web quest objective progress tracking and reward payout.
 - [x] Added web quest journal with active/completed/available quest groups.
 - [x] Added web equipment equip/unequip screen and combat stat bonuses.
+- [x] Added web portable JSON save export/import bridge.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -109,7 +110,7 @@
 - [x] Add image/sound asset manager scaffold.
 - [x] Add sprite/map placeholder image assets.
 - [x] Add sample UI/combat/fishing sounds.
-- [ ] Sync web client with SQLite/backend or add export/import bridge.
+- [x] Sync web client with SQLite/backend or add export/import bridge.
 
 ### Testing / quality
 

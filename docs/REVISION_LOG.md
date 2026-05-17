@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 18 - Web save export/import bridge
+
+- Added Export and Import controls to the web header.
+- Added portable JSON save export for character, inventory, equipment, quest state, and quest progress.
+- Added JSON import that applies the save, persists it to localStorage, and refreshes the current UI.
+- Refactored web save state serialization into reusable `serializableState()` and `applySave()` helpers.
+
 ## Revision 17 - Web equipment flow
 
 - Added an Equipment screen to the web sidebar.
