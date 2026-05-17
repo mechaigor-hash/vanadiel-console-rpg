@@ -85,6 +85,8 @@ function openCreator() {
     event.preventDefault();
     state.character = makeCharacter(form);
     state.inventory = [];
+    state.activeQuests = [];
+    state.completedQuests = [];
     STARTING_GEAR[state.character.mainJob].forEach((item) => addItem(item));
     document.querySelector(".modal-backdrop").remove();
     addLog(`${state.character.name} begins in ${mapName(state.character.currentMap)}.`);
@@ -101,6 +103,7 @@ function mapName(slug) { return content.mapBySlug[slug]?.name ?? slug; }
 function currentMap() { return content.mapBySlug[state.character?.currentMap] ?? content.maps[0]; }
 function localMobs() { return content.mobs.filter((mob) => mob.map_slug === state.character?.currentMap); }
 function localNodes() { return content.gathering.filter((node) => node.map_slug === state.character?.currentMap); }
+function localNpcs() { return content.npcs.filter((npc) => npc.map_slug === state.character?.currentMap); }
 
 function renderCharacter() {
   const c = state.character;
@@ -117,16 +120,58 @@ function renderCharacter() {
 
 function renderWorld() {
   const map = state.character ? currentMap() : content.maps[0];
-  const npcs = content.npcs.filter((n) => n.map_slug === map.slug);
+  const npcs = localNpcs();
   els.title.textContent = "World";
   els.screen.innerHTML = `
     <div class="hero-art" style="--art: url('assets/images/map-placeholder.svg')"></div>
     <h2>${map.name}</h2><p>${map.region}${map.water_type ? ` • ${map.water_type} water` : ""}</p>
     <div class="card-grid">
-      ${card("NPCs here", npcs.length ? npcs.map((n) => n.name).join(", ") : "No NPCs seeded for this map yet.", ["dialogue"])}
+      ${card("NPCs here", npcs.length ? npcs.map((n) => n.name).join(", ") : "No NPCs seeded for this map yet.", ["dialogue"], npcs.length ? `<button data-open-npcs>Talk</button>` : "")}
       ${card("Mobs here", localMobs().length ? localMobs().map((m) => `Lv${m.level} ${m.name}`).join(", ") : "No mobs seeded for this map yet.", ["encounters"])}
       ${card("Nodes here", localNodes().length ? localNodes().map((n) => n.kind).join(", ") : "No gathering nodes seeded for this map yet.", ["gathering"])}
     </div>`;
+  els.screen.querySelectorAll("[data-open-npcs]").forEach((b) => b.addEventListener("click", () => setScreen("npcs")));
+}
+
+function questSummary(quest) {
+  const objectiveText = (quest.objectives ?? []).map((objective) => {
+    if (objective.type === "defeat") return `Defeat ${objective.count} ${objective.mob_family}`;
+    if (objective.type === "gather") return `Gather ${objective.count} ${content.itemBySlug[objective.item]?.name ?? objective.item}`;
+    return `${objective.type}: ${objective.count ?? 1}`;
+  }).join(", ");
+  const rewardBits = [];
+  if (quest.rewards?.gil) rewardBits.push(`${quest.rewards.gil} gil`);
+  for (const [slug, qty] of Object.entries(quest.rewards?.items ?? {})) rewardBits.push(`${qty} ${content.itemBySlug[slug]?.name ?? slug}`);
+  return `${objectiveText || "Speak with locals"}${rewardBits.length ? ` • Rewards: ${rewardBits.join(", ")}` : ""}`;
+}
+
+function acceptQuest(slug) {
+  if (!state.character) return addLog("Create a character first.");
+  if (state.completedQuests.includes(slug)) return addLog("That quest is already complete.");
+  if (state.activeQuests.includes(slug)) return addLog("That quest is already in your journal.");
+  const quest = content.questBySlug[slug];
+  state.activeQuests.push(slug);
+  addLog(`Accepted quest: ${quest.title}.`);
+  assets.play("ui_confirm");
+  renderNPCs();
+}
+
+function renderNPCs() {
+  els.title.textContent = "NPCs";
+  const npcs = state.character ? localNpcs() : [];
+  if (!npcs.length) { els.screen.innerHTML = `<p>No local NPCs. Travel to a city or outpost.</p>`; return; }
+  els.screen.innerHTML = `<div class="hero-art" style="--art: url('assets/images/map-placeholder.svg')"></div><div class="card-grid">${npcs.map((npc) => {
+    const quests = content.questsByStartNpc[npc.slug] ?? [];
+    const questActions = quests.map((quest) => {
+      const active = state.activeQuests.includes(quest.slug);
+      const done = state.completedQuests.includes(quest.slug);
+      const label = done ? "Complete" : active ? "In Journal" : "Accept Quest";
+      return `<div class="quest-callout"><strong>${quest.title}</strong><p>${questSummary(quest)}</p><button data-quest="${quest.slug}" ${active || done ? "disabled" : ""}>${label}</button></div>`;
+    }).join("");
+    return card(npc.name, npc.dialogue ?? "They have nothing to say yet.", [mapName(npc.map_slug), quests.length ? "quest" : "dialogue"], questActions || `<button data-talk="${npc.slug}">Talk</button>`);
+  }).join("")}</div>`;
+  els.screen.querySelectorAll("[data-talk]").forEach((b) => b.addEventListener("click", () => { addLog(`${content.npcBySlug[b.dataset.talk].name}: ${content.npcBySlug[b.dataset.talk].dialogue}`); assets.play("ui_confirm"); }));
+  els.screen.querySelectorAll("[data-quest]").forEach((b) => b.addEventListener("click", () => acceptQuest(b.dataset.quest)));
 }
 
 function renderTravel() {
@@ -267,7 +312,7 @@ function renderContent() {
 function render() {
   renderCharacter();
   if (!state.character && state.screen !== "content") els.screen.innerHTML = `<p>Create a character to begin.</p>`;
-  const routes = { world: renderWorld, travel: renderTravel, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, content: renderContent };
+  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, content: renderContent };
   (routes[state.screen] ?? renderWorld)();
 }
 

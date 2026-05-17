@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 14 - Web NPC interaction screen
+
+- Added an NPC screen to the web sidebar and world screen quick action.
+- Added local NPC cards with dialogue, quest callouts, objective summaries, and rewards.
+- Added quest acceptance tracking in web state/localStorage.
+- Indexed NPCs and quests during content-pack loading for interaction lookups.
+
 ## Revision 13 - Web sound placeholders and fishing HUD
 
 - Added Web Audio synth sound placeholders for UI confirm/cancel, combat hits, spell casting, fishing tension, and catches.
