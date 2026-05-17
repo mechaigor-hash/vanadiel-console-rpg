@@ -39,6 +39,7 @@
 - [x] Added web NPC interaction screen with dialogue and quest acceptance.
 - [x] Added web quest objective progress tracking and reward payout.
 - [x] Added web quest journal with active/completed/available quest groups.
+- [x] Added web equipment equip/unequip screen and combat stat bonuses.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -62,8 +63,8 @@
 - [x] Add HP/MP tracking during combat.
 - [x] Add starter spell casting in combat.
 - [ ] Add job abilities beyond basic spell casting.
-- [ ] Add equipment equip/unequip flow.
-- [ ] Add derived attack/defense/magic stats from gear.
+- [x] Add equipment equip/unequip flow.
+- [x] Add derived attack/defense/magic stats from gear.
 - [ ] Add level-up rules and EXP thresholds.
 - [ ] Add death/return-home handling.
 

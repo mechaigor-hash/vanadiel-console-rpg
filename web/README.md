@@ -22,7 +22,7 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 
 - HTML/CSS layout with three panels: character/sidebar, main stage, event log.
 - Character creation modal.
-- Browser localStorage save/load for character, inventory, accepted/completed quests, and quest progress.
+- Browser localStorage save/load for character, inventory, equipment, accepted/completed quests, and quest progress.
 - Loads `core_content.json` generated from the Python content pack.
 - World screen showing local NPCs, mobs, and gathering nodes.
 - NPC interaction screen with dialogue, quest summaries, quest acceptance, objective progress, completion, and rewards.
@@ -31,6 +31,7 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 - Clickable local combat prototype.
 - Clickable local gathering prototype plus fishing mini-game with reel/wait/slacken choices.
 - Inventory screen grouped by item kind.
+- Equipment screen with slot-based equip/unequip, job restrictions, and combat attack/defense bonuses.
 - Database summary screen.
 - Modular engine scaffolding:
   - `engine/constants.js` - race/job/nation/stat constants

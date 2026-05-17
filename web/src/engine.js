@@ -86,6 +86,7 @@ function openCreator() {
     event.preventDefault();
     state.character = makeCharacter(form);
     state.inventory = [];
+    state.equipment = {};
     state.activeQuests = [];
     state.completedQuests = [];
     state.questProgress = {};
@@ -285,8 +286,8 @@ function startCombat(mob) {
   addLog(`A ${mob.name} attacks!`);
   renderCombat();
 }
-function playerDamage() { return Math.max(1, state.character.stats.str + Math.floor(state.character.stats.dex / 2) + roll(0, 3) - 4); }
-function mobDamage() { return Math.max(1, (state.combat.mob.stats?.str ?? 5 + state.combat.mob.level) + roll(0, 3) - Math.floor(state.character.stats.vit / 2)); }
+function playerDamage() { return Math.max(1, state.character.stats.str + Math.floor(state.character.stats.dex / 2) + gearAttackBonus() + roll(0, 3) - 4); }
+function mobDamage() { return Math.max(1, (state.combat.mob.stats?.str ?? 5 + state.combat.mob.level) + roll(0, 3) - Math.floor((state.character.stats.vit + gearDefenseBonus()) / 2)); }
 function combatAction(action) {
   if (!state.combat) return;
   if (action === "attack") { const dmg = playerDamage(); state.combat.hp -= dmg; addLog(`You hit ${state.combat.mob.name} for ${dmg}.`); assets.play("combat_hit"); }
@@ -387,6 +388,49 @@ function useNode(node) {
   render();
 }
 
+function gearItems() { return state.inventory.filter((item) => ["weapon", "armor"].includes(item.kind) && item.data?.slot); }
+function equippedItems() { return Object.values(state.equipment ?? {}).map((slug) => content.itemBySlug[slug]).filter(Boolean); }
+function gearAttackBonus() { return equippedItems().reduce((total, item) => total + (item.data?.damage ?? 0), 0); }
+function gearDefenseBonus() { return equippedItems().reduce((total, item) => total + (item.data?.defense ?? 0), 0); }
+function canEquip(item) { return !item.data?.jobs || item.data.jobs.includes(state.character?.mainJob); }
+function equipItem(slug) {
+  const item = content.itemBySlug[slug];
+  if (!item?.data?.slot) return addLog("That item cannot be equipped.");
+  if (!canEquip(item)) return addLog(`${state.character.mainJob} cannot equip ${item.name}.`);
+  state.equipment[item.data.slot] = item.slug;
+  addLog(`Equipped ${item.name}.`);
+  assets.play("ui_confirm");
+  renderEquipment();
+}
+function unequipSlot(slot) {
+  const item = content.itemBySlug[state.equipment?.[slot]];
+  delete state.equipment[slot];
+  addLog(`Unequipped ${item?.name ?? slot}.`);
+  assets.play("ui_cancel");
+  renderEquipment();
+}
+
+function renderEquipment() {
+  els.title.textContent = "Equipment";
+  if (!state.character) { els.screen.innerHTML = `<p>Create a character to manage equipment.</p>`; return; }
+  const slots = ["main", "sub", "head", "body", "hands", "legs", "feet"];
+  const equipped = slots.map((slot) => {
+    const item = content.itemBySlug[state.equipment?.[slot]];
+    return card(slot.toUpperCase(), item ? `${item.name}${item.data?.damage ? ` • DMG +${item.data.damage}` : ""}${item.data?.defense ? ` • DEF +${item.data.defense}` : ""}` : "Empty", [slot], item ? `<button data-unequip="${slot}">Unequip</button>` : "");
+  }).join("");
+  const available = gearItems().map((item) => card(item.name, `${item.kind} / ${item.data.slot}${item.data.damage ? ` • DMG +${item.data.damage}` : ""}${item.data.defense ? ` • DEF +${item.data.defense}` : ""}`, [canEquip(item) ? "usable" : "wrong job", item.slug], `<button data-equip="${item.slug}" ${canEquip(item) ? "" : "disabled"}>Equip</button>`)).join("");
+  els.screen.innerHTML = `
+    <div class="hero-art" style="--art: url('assets/images/hero-placeholder.svg')"></div>
+    <div class="hud-row">
+      <div class="hud-box"><strong>Attack Bonus</strong>+${gearAttackBonus()}</div>
+      <div class="hud-box"><strong>Defense Bonus</strong>+${gearDefenseBonus()}</div>
+    </div>
+    <h2>Equipped</h2><div class="card-grid">${equipped}</div>
+    <h2>Available Gear</h2>${available ? `<div class="card-grid">${available}</div>` : `<p>No equippable gear in inventory yet.</p>`}`;
+  els.screen.querySelectorAll("[data-equip]").forEach((b) => b.addEventListener("click", () => equipItem(b.dataset.equip)));
+  els.screen.querySelectorAll("[data-unequip]").forEach((b) => b.addEventListener("click", () => unequipSlot(b.dataset.unequip)));
+}
+
 function renderInventory() {
   els.title.textContent = "Inventory";
   if (!state.inventory.length) { els.screen.innerHTML = "<p>No items yet.</p>"; return; }
@@ -407,7 +451,7 @@ function renderContent() {
 function render() {
   renderCharacter();
   if (!state.character && state.screen !== "content") els.screen.innerHTML = `<p>Create a character to begin.</p>`;
-  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, quests: renderQuestJournal, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, content: renderContent };
+  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, quests: renderQuestJournal, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, equipment: renderEquipment, content: renderContent };
   (routes[state.screen] ?? renderWorld)();
 }
 

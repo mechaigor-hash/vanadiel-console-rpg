@@ -2,6 +2,7 @@ export const state = {
   screen: "world",
   character: null,
   inventory: [],
+  equipment: {},
   activeQuests: [],
   completedQuests: [],
   questProgress: {},
@@ -10,7 +11,7 @@ export const state = {
 };
 
 export function saveGame(storage = localStorage) {
-  storage.setItem("vanadielWebSave", JSON.stringify({ character: state.character, inventory: state.inventory, activeQuests: state.activeQuests, completedQuests: state.completedQuests, questProgress: state.questProgress }));
+  storage.setItem("vanadielWebSave", JSON.stringify({ character: state.character, inventory: state.inventory, equipment: state.equipment, activeQuests: state.activeQuests, completedQuests: state.completedQuests, questProgress: state.questProgress }));
 }
 
 export function loadGame(storage = localStorage) {
@@ -19,6 +20,7 @@ export function loadGame(storage = localStorage) {
   const save = JSON.parse(raw);
   state.character = save.character;
   state.inventory = save.inventory ?? [];
+  state.equipment = save.equipment ?? {};
   state.activeQuests = save.activeQuests ?? [];
   state.completedQuests = save.completedQuests ?? [];
   state.questProgress = save.questProgress ?? {};

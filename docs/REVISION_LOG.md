@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 17 - Web equipment flow
+
+- Added an Equipment screen to the web sidebar.
+- Added equip/unequip actions for inventory gear by slot with basic job restrictions.
+- Save/load now persists equipped gear.
+- Equipped weapon damage and armor defense now feed into web combat damage mitigation.
+
 ## Revision 16 - Web quest journal
 
 - Added a Quest Journal screen to the web sidebar.
