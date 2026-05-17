@@ -72,7 +72,7 @@ Bundled starter content now lives in `src/vanadiel_console/data/core_content.jso
 - `recipes` defines crafting.
 - `gathering` defines fishing/mining/resource nodes.
 
-The Python seeder can also load another JSON file with the same top-level keys, so future private/mod content can be added without editing code.
+The Python seeder can also load another JSON file with the same top-level keys, so future private/mod content can be added without editing code. Content packs are validated before seeding so missing fields, duplicate slugs, and bad map/NPC/item/mob/quest references produce friendly errors.
 
 ## Repository
 

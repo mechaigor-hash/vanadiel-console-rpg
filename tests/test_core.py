@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from vanadiel_console.db import add_item, connect, create_character, current_location, init_db, list_inventory, load_content_pack, set_current_location
+from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, init_db, list_inventory, load_content_pack, set_current_location
 from vanadiel_console.models import CharacterBuild, calculate_stats
 from vanadiel_console.systems import auto_combat, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather
 
@@ -17,6 +17,29 @@ def test_core_content_pack_loads_from_json():
     assert any(mob["slug"] == "yagudo_acolyte_l5" for mob in content["mobs"])
     assert any(zone["slug"] == "jugner_forest_s" for zone in content["maps"])
     assert any(mob["slug"] == "campaign_orc_l72" for mob in content["mobs"])
+
+
+def test_content_pack_validation_reports_bad_references(tmp_path):
+    bad_pack = tmp_path / "bad_content.json"
+    bad_pack.write_text(
+        """{
+          \"items\": [{\"slug\": \"copper_ore\", \"name\": \"Copper Ore\", \"kind\": \"material\"}],
+          \"maps\": [{\"slug\": \"bastok_mines\", \"name\": \"Bastok Mines\", \"region\": \"Gustaberg\"}],
+          \"npcs\": [{\"slug\": \"bad_npc\", \"name\": \"Bad NPC\", \"map_slug\": \"missing_map\"}],
+          \"quests\": [{\"slug\": \"bad_quest\", \"title\": \"Bad Quest\", \"start_npc_slug\": \"missing_npc\", \"objectives\": [{\"type\": \"gather\", \"item\": \"missing_item\", \"count\": 1}]}],
+          \"mobs\": [], \"loot\": [], \"recipes\": [], \"gathering\": []
+        }""",
+        encoding="utf-8",
+    )
+    try:
+        load_content_pack(bad_pack)
+    except ContentValidationError as exc:
+        message = str(exc)
+    else:
+        raise AssertionError("Expected bad content pack to fail validation")
+    assert "npcs:bad_npc references unknown map_slug missing_map" in message
+    assert "quests:bad_quest references unknown start_npc_slug missing_npc" in message
+    assert "quests:bad_quest gather objective references unknown item missing_item" in message
 
 
 def test_character_stats_are_affected_by_race_job_subjob_and_nation():

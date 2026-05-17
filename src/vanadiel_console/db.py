@@ -9,6 +9,97 @@ from .models import CharacterBuild, STARTING_GEAR, calculate_stats
 
 SCHEMA_VERSION = 1
 
+
+class ContentValidationError(ValueError):
+    """Raised when a JSON content pack has missing fields or bad references."""
+
+
+def _require_fields(section: str, row: dict, fields: tuple[str, ...], errors: list[str]) -> None:
+    missing = [field for field in fields if field not in row or row[field] in (None, "")]
+    if missing:
+        errors.append(f"{section}:{row.get('slug', '<missing slug>')} missing required field(s): {', '.join(missing)}")
+
+
+def _slug_set(content: dict, section: str) -> set[str]:
+    return {row.get("slug") for row in content.get(section, []) if row.get("slug")}
+
+
+def validate_content_pack(content: dict) -> None:
+    """Validate required fields and cross-references for a content pack.
+
+    The checks intentionally stay lightweight/friendly so modders get a concise
+    list of fixable problems before SQLite foreign-key failures or KeyErrors.
+    """
+    errors: list[str] = []
+    required = {
+        "items": ("slug", "name", "kind"),
+        "maps": ("slug", "name", "region"),
+        "npcs": ("slug", "name", "map_slug"),
+        "quests": ("slug", "title"),
+        "mobs": ("slug", "name", "family", "level"),
+        "recipes": ("slug", "craft", "result_item_slug"),
+        "gathering": ("slug", "map_slug", "kind"),
+    }
+    for section, fields in required.items():
+        seen: set[str] = set()
+        for row in content.get(section, []):
+            _require_fields(section, row, fields, errors)
+            slug = row.get("slug")
+            if slug in seen:
+                errors.append(f"{section}:{slug} duplicate slug")
+            if slug:
+                seen.add(slug)
+
+    item_slugs = _slug_set(content, "items")
+    map_slugs = _slug_set(content, "maps")
+    npc_slugs = _slug_set(content, "npcs")
+    mob_slugs = _slug_set(content, "mobs")
+    quest_slugs = _slug_set(content, "quests")
+
+    for npc in content.get("npcs", []):
+        if npc.get("map_slug") and npc["map_slug"] not in map_slugs:
+            errors.append(f"npcs:{npc.get('slug')} references unknown map_slug {npc['map_slug']}")
+    for mob in content.get("mobs", []):
+        if mob.get("map_slug") and mob["map_slug"] not in map_slugs:
+            errors.append(f"mobs:{mob.get('slug')} references unknown map_slug {mob['map_slug']}")
+    for quest in content.get("quests", []):
+        if quest.get("start_npc_slug") and quest["start_npc_slug"] not in npc_slugs:
+            errors.append(f"quests:{quest.get('slug')} references unknown start_npc_slug {quest['start_npc_slug']}")
+        for prerequisite in quest.get("prerequisites", []):
+            if prerequisite not in quest_slugs:
+                errors.append(f"quests:{quest.get('slug')} references unknown prerequisite {prerequisite}")
+        for objective in quest.get("objectives", []):
+            if objective.get("type") == "gather" and objective.get("item") not in item_slugs:
+                errors.append(f"quests:{quest.get('slug')} gather objective references unknown item {objective.get('item')}")
+        for item_slug in quest.get("rewards", {}).get("items", {}):
+            if item_slug not in item_slugs:
+                errors.append(f"quests:{quest.get('slug')} reward references unknown item {item_slug}")
+    for loot in content.get("loot", []):
+        if loot.get("mob_slug") not in mob_slugs:
+            errors.append(f"loot:{loot.get('mob_slug', '<missing mob>')} references unknown mob_slug {loot.get('mob_slug')}")
+        if loot.get("item_slug") not in item_slugs:
+            errors.append(f"loot:{loot.get('mob_slug', '<missing mob>')} references unknown item_slug {loot.get('item_slug')}")
+        if loot.get("weight", 0) <= 0:
+            errors.append(f"loot:{loot.get('mob_slug', '<missing mob>')} weight must be positive")
+    for recipe in content.get("recipes", []):
+        if recipe.get("result_item_slug") and recipe["result_item_slug"] not in item_slugs:
+            errors.append(f"recipes:{recipe.get('slug')} references unknown result_item_slug {recipe['result_item_slug']}")
+        for item_slug in recipe.get("ingredients", {}):
+            if item_slug not in item_slugs:
+                errors.append(f"recipes:{recipe.get('slug')} ingredient references unknown item {item_slug}")
+    for node in content.get("gathering", []):
+        if node.get("map_slug") and node["map_slug"] not in map_slugs:
+            errors.append(f"gathering:{node.get('slug')} references unknown map_slug {node['map_slug']}")
+        for entry in node.get("loot_table", []):
+            if entry.get("item") not in item_slugs:
+                errors.append(f"gathering:{node.get('slug')} references unknown loot item {entry.get('item')}")
+            if entry.get("weight", 0) <= 0:
+                errors.append(f"gathering:{node.get('slug')} loot weight must be positive")
+
+    if errors:
+        raise ContentValidationError("Content pack validation failed:\n- " + "\n- ".join(errors))
+
+
 SCHEMA = """
 PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -205,7 +296,9 @@ def load_content_pack(path: str | Path | None = None) -> dict:
         raw = files("vanadiel_console.data").joinpath("core_content.json").read_text(encoding="utf-8")
     else:
         raw = Path(path).read_text(encoding="utf-8")
-    return json.loads(raw)
+    content = json.loads(raw)
+    validate_content_pack(content)
+    return content
 
 
 def seed(con: sqlite3.Connection, content_path: str | Path | None = None) -> None:

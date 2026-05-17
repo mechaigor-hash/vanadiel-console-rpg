@@ -41,13 +41,14 @@
 - [x] Added web quest journal with active/completed/available quest groups.
 - [x] Added web equipment equip/unequip screen and combat stat bonuses.
 - [x] Added web portable JSON save export/import bridge.
+- [x] Added content-pack validation with friendly cross-reference errors.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
 - [x] Added README with run/test instructions and project checklist.
 - [x] Added revision log.
 - [x] Added automated tests.
-- [x] Test gate currently passing: `6 passed`.
+- [x] Test gate currently passing: `12 passed`.
 
 ## Needs done next
 
@@ -80,7 +81,7 @@
 
 ### Content authoring
 
-- [ ] Add content-pack validation with friendly errors.
+- [x] Add content-pack validation with friendly errors.
 - [ ] Document the JSON schema for items, mobs, maps, quests, NPCs, recipes, and gathering nodes.
 - [ ] Split bundled content into separate files by type once it grows.
 - [x] Add first pass of starter-zone mobs and loot tables.
@@ -114,7 +115,7 @@
 
 ### Testing / quality
 
-- [ ] Add tests for content-pack validation.
+- [x] Add tests for content-pack validation.
 - [ ] Add tests for quest progression.
 - [x] Add tests for combat once implemented.
 - [x] Add tests for interactive fishing once implemented.

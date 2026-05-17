@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 19 - Content-pack validation
+
+- Added friendly content-pack validation before seeding JSON into SQLite.
+- Validation now checks required fields, duplicate slugs, bad map/NPC/item/mob/quest references, and non-positive loot weights.
+- Added `ContentValidationError` with a consolidated list of fixable content errors.
+- Added pytest coverage for invalid content-pack reference reporting.
+
 ## Revision 18 - Web save export/import bridge
 
 - Added Export and Import controls to the web header.
