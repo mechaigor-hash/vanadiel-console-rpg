@@ -1,5 +1,11 @@
 # Revision Log
 
+## Revision 23 - CI matrix hardening
+
+- Expanded GitHub Actions pytest coverage to Python 3.11, 3.12, and 3.13.
+- Added a package compile step before pytest so syntax/import issues fail earlier in CI.
+- Kept the local equipment-helper test gate passing after the workflow change.
+
 ## Revision 22 - SQLite equipment helpers and tests
 
 - Added Python equipment helpers for item data lookup, equipped item listing, derived attack/defense/magic bonuses, equip, and unequip.

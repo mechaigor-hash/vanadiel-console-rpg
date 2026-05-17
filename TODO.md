@@ -41,6 +41,7 @@
 - [x] Added web quest journal with active/completed/available quest groups.
 - [x] Added web equipment equip/unequip screen and combat stat bonuses.
 - [x] Added SQLite equipment helpers and stat-change tests.
+- [x] Hardened GitHub CI with Python 3.11/3.12/3.13 matrix and compile step.
 - [x] Added web portable JSON save export/import bridge.
 - [x] Added content-pack validation with friendly cross-reference errors.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
