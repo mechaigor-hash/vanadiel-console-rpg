@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, init_db, list_inventory, load_content_pack, set_current_location
 from vanadiel_console.models import CharacterBuild, calculate_stats
-from vanadiel_console.systems import auto_combat, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather
+from vanadiel_console.systems import accept_quest, auto_combat, available_quests, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked
 
 
 def memory_db():
@@ -94,6 +94,28 @@ def test_expanded_era_content_seeds_locations_npcs_and_mobs():
     assert counts["mobs"] >= 30
     wotg = con.execute("SELECT name FROM maps WHERE slug='southern_sandoria_s'").fetchone()
     assert wotg["name"] == "Southern San d'Oria (S)"
+
+
+def test_quest_prerequisites_gate_followup_until_complete():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Questor", "Hume", "Female", "San d'Oria", "Warrior", None))
+    available = {row["slug"] for row in available_quests(con, cid)}
+    assert "first_steps" in available
+    assert "gate_guard_followup" not in available
+    assert missing_quest_prerequisites(con, cid, "gate_guard_followup") == ["first_steps"]
+    assert quest_is_unlocked(con, cid, "gate_guard_followup") is False
+    try:
+        accept_quest(con, cid, "gate_guard_followup")
+    except ValueError as exc:
+        assert "first_steps" in str(exc)
+    else:
+        raise AssertionError("Expected locked follow-up quest to be rejected")
+
+    mark_quest_complete(con, cid, "first_steps")
+    assert quest_is_unlocked(con, cid, "gate_guard_followup") is True
+    accept_quest(con, cid, "gate_guard_followup")
+    active = con.execute("SELECT status FROM character_quests WHERE character_id=? AND quest_slug='gate_guard_followup'", (cid,)).fetchone()
+    assert active["status"] == "active"
 
 
 def test_defeat_mob_grants_exp_and_possible_inventory_changes(monkeypatch):

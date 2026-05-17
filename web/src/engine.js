@@ -198,6 +198,20 @@ function isQuestReady(quest) {
   return (quest.objectives ?? []).every((objective) => questProgress(quest.slug, objective) >= (objective.count ?? 1));
 }
 
+function missingQuestPrerequisites(quest) {
+  return (quest.prerequisites ?? []).filter((slug) => !state.completedQuests.includes(slug));
+}
+
+function isQuestUnlocked(quest) {
+  return missingQuestPrerequisites(quest).length === 0;
+}
+
+function prerequisiteText(quest) {
+  const missing = missingQuestPrerequisites(quest);
+  if (!missing.length) return "";
+  return `Locked until complete: ${missing.map((slug) => content.questBySlug[slug]?.title ?? slug).join(", ")}`;
+}
+
 function questProgressText(quest) {
   return (quest.objectives ?? []).map((objective) => `${questProgress(quest.slug, objective)}/${objective.count ?? 1}`).join(", ");
 }
@@ -232,12 +246,14 @@ function questCard(quest, status) {
   const done = status === "complete";
   const ready = active && isQuestReady(quest);
   const startNpc = content.npcBySlug[quest.start_npc_slug];
-  const badges = [quest.quest_type ?? "quest", done ? "complete" : ready ? "ready" : active ? "active" : "available"];
+  const unlocked = done || active || isQuestUnlocked(quest);
+  const badges = [quest.quest_type ?? "quest", done ? "complete" : ready ? "ready" : active ? "active" : unlocked ? "available" : "locked"];
   const lines = [
     questSummary(quest),
     startNpc ? `Start: ${startNpc.name} in ${mapName(startNpc.map_slug)}` : "Start NPC unknown",
     active ? `Progress: ${questProgressText(quest)}` : "",
     ready ? "Ready to turn in." : "",
+    !unlocked ? prerequisiteText(quest) : "",
   ].filter(Boolean).join("<br>");
   const action = ready ? `<button data-complete-quest="${quest.slug}">Complete Quest</button>` : "";
   return card(quest.title, lines, badges, action);
@@ -248,7 +264,8 @@ function renderQuestJournal() {
   if (!state.character) { els.screen.innerHTML = `<p>Create a character to begin tracking quests.</p>`; return; }
   const active = state.activeQuests.map((slug) => content.questBySlug[slug]).filter(Boolean);
   const completed = state.completedQuests.map((slug) => content.questBySlug[slug]).filter(Boolean);
-  const available = (content.quests ?? []).filter((quest) => !state.activeQuests.includes(quest.slug) && !state.completedQuests.includes(quest.slug));
+  const available = (content.quests ?? []).filter((quest) => !state.activeQuests.includes(quest.slug) && !state.completedQuests.includes(quest.slug) && isQuestUnlocked(quest));
+  const locked = (content.quests ?? []).filter((quest) => !state.activeQuests.includes(quest.slug) && !state.completedQuests.includes(quest.slug) && !isQuestUnlocked(quest));
   els.screen.innerHTML = `
     <div class="hero-art" style="--art: url('assets/images/map-placeholder.svg')"></div>
     <h2>Active Quests</h2>
@@ -256,7 +273,9 @@ function renderQuestJournal() {
     <h2>Completed Quests</h2>
     ${completed.length ? `<div class="card-grid">${completed.map((quest) => questCard(quest, "complete")).join("")}</div>` : `<p>No completed quests yet.</p>`}
     <h2>Available Leads</h2>
-    ${available.length ? `<div class="card-grid">${available.map((quest) => questCard(quest, "available")).join("")}</div>` : `<p>No available quest leads left in this seed slice.</p>`}`;
+    ${available.length ? `<div class="card-grid">${available.map((quest) => questCard(quest, "available")).join("")}</div>` : `<p>No available quest leads left in this seed slice.</p>`}
+    <h2>Locked Leads</h2>
+    ${locked.length ? `<div class="card-grid">${locked.map((quest) => questCard(quest, "locked")).join("")}</div>` : `<p>No locked quest chains currently visible.</p>`}`;
   els.screen.querySelectorAll("[data-complete-quest]").forEach((b) => b.addEventListener("click", () => completeQuest(b.dataset.completeQuest)));
 }
 
@@ -265,6 +284,8 @@ function acceptQuest(slug) {
   if (state.completedQuests.includes(slug)) return addLog("That quest is already complete.");
   if (state.activeQuests.includes(slug)) return addLog("That quest is already in your journal.");
   const quest = content.questBySlug[slug];
+  const missing = missingQuestPrerequisites(quest);
+  if (missing.length) return addLog(`${quest.title} is locked. Complete: ${missing.map((id) => content.questBySlug[id]?.title ?? id).join(", ")}.`);
   state.activeQuests.push(slug);
   state.questProgress[slug] = {};
   addLog(`Accepted quest: ${quest.title}.`);
@@ -283,9 +304,11 @@ function renderNPCs() {
       const active = state.activeQuests.includes(quest.slug);
       const done = state.completedQuests.includes(quest.slug);
       const ready = active && isQuestReady(quest);
-      const label = done ? "Complete" : ready ? "Complete Quest" : active ? "In Journal" : "Accept Quest";
+      const unlocked = done || active || isQuestUnlocked(quest);
+      const label = done ? "Complete" : ready ? "Complete Quest" : active ? "In Journal" : unlocked ? "Accept Quest" : "Locked";
       const progress = active ? `<p class="quest-progress">Progress: ${questProgressText(quest)}</p>` : "";
-      return `<div class="quest-callout"><strong>${quest.title}</strong><p>${questSummary(quest)}</p>${progress}<button data-quest="${quest.slug}" ${done || (active && !ready) ? "disabled" : ""}>${label}</button></div>`;
+      const lockText = !unlocked ? `<p class="quest-progress">${prerequisiteText(quest)}</p>` : "";
+      return `<div class="quest-callout"><strong>${quest.title}</strong><p>${questSummary(quest)}</p>${progress}${lockText}<button data-quest="${quest.slug}" ${done || !unlocked || (active && !ready) ? "disabled" : ""}>${label}</button></div>`;
     }).join("");
     return card(npc.name, npc.dialogue ?? "They have nothing to say yet.", [mapName(npc.map_slug), quests.length ? "quest" : "dialogue"], questActions || `<button data-talk="${npc.slug}">Talk</button>`);
   }).join("")}</div>`;

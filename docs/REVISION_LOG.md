@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 21 - Quest prerequisite gating
+
+- Added a follow-up gate-guard quest that stays locked until `first_steps` is complete.
+- Added Python quest prerequisite helpers for missing prerequisites, unlock checks, available quest filtering, acceptance, and completion marking.
+- Updated the web quest journal and NPC quest cards to separate available vs locked leads and prevent accepting locked quests.
+- Added test coverage for locked quest rejection and unlock-after-completion flow.
+
 ## Revision 20 - Content schema documentation
 
 - Added `docs/CONTENT_SCHEMA.md` covering every top-level content-pack section: items, maps, NPCs, quests, mobs, loot, recipes, and gathering nodes.

@@ -831,6 +831,19 @@
       }
     },
     {
+      "slug": "gate_guard_followup",
+      "title": "Report Back to the Gate",
+      "quest_type": "main",
+      "start_npc_slug": "gate_guard_aile",
+      "prerequisites": [
+        "first_steps"
+      ],
+      "objectives": [],
+      "rewards": {
+        "gil": 50
+      }
+    },
+    {
       "slug": "ore_for_the_miner",
       "title": "Ore for the Miner",
       "quest_type": "side",

@@ -213,6 +213,62 @@ def auto_combat(con: sqlite3.Connection, character_id: int, mob_slug: str, actio
     return CombatResult(False, False, 0, [], log)
 
 
+def completed_quest_slugs(con: sqlite3.Connection, character_id: int) -> set[str]:
+    rows = con.execute(
+        "SELECT quest_slug FROM character_quests WHERE character_id = ? AND status = 'complete'",
+        (character_id,),
+    ).fetchall()
+    return {row["quest_slug"] for row in rows}
+
+
+def quest_prerequisites(con: sqlite3.Connection, quest_slug: str) -> list[str]:
+    row = con.execute("SELECT prerequisites_json FROM quests WHERE slug = ?", (quest_slug,)).fetchone()
+    if not row:
+        raise ValueError(f"Unknown quest: {quest_slug}")
+    return list(json.loads(row["prerequisites_json"] or "[]"))
+
+
+def missing_quest_prerequisites(con: sqlite3.Connection, character_id: int, quest_slug: str) -> list[str]:
+    completed = completed_quest_slugs(con, character_id)
+    return [slug for slug in quest_prerequisites(con, quest_slug) if slug not in completed]
+
+
+def quest_is_unlocked(con: sqlite3.Connection, character_id: int, quest_slug: str) -> bool:
+    return not missing_quest_prerequisites(con, character_id, quest_slug)
+
+
+def available_quests(con: sqlite3.Connection, character_id: int) -> list[sqlite3.Row]:
+    rows = con.execute(
+        """SELECT * FROM quests
+        WHERE slug NOT IN (SELECT quest_slug FROM character_quests WHERE character_id = ?)
+        ORDER BY quest_type, title""",
+        (character_id,),
+    ).fetchall()
+    return [row for row in rows if quest_is_unlocked(con, character_id, row["slug"])]
+
+
+def accept_quest(con: sqlite3.Connection, character_id: int, quest_slug: str) -> None:
+    missing = missing_quest_prerequisites(con, character_id, quest_slug)
+    if missing:
+        names = ", ".join(missing)
+        raise ValueError(f"Quest {quest_slug} is locked; complete prerequisite(s): {names}")
+    con.execute(
+        """INSERT INTO character_quests(character_id, quest_slug, status, progress_json) VALUES(?,?, 'active', '{}')
+        ON CONFLICT(character_id, quest_slug) DO NOTHING""",
+        (character_id, quest_slug),
+    )
+    con.commit()
+
+
+def mark_quest_complete(con: sqlite3.Connection, character_id: int, quest_slug: str) -> None:
+    con.execute(
+        """INSERT INTO character_quests(character_id, quest_slug, status, progress_json) VALUES(?,?, 'complete', '{}')
+        ON CONFLICT(character_id, quest_slug) DO UPDATE SET status = 'complete'""",
+        (character_id, quest_slug),
+    )
+    con.commit()
+
+
 def gather(con: sqlite3.Connection, character_id: int, node_slug: str) -> tuple[str, int]:
     node = con.execute("SELECT * FROM gathering_nodes WHERE slug = ?", (node_slug,)).fetchone()
     if not node:

@@ -77,7 +77,7 @@
 - [x] Add objective progress tracking.
 - [x] Add reward payout logic.
 - [ ] Add nation-specific opening missions for Bastok, San d'Oria, and Windurst.
-- [ ] Add prerequisites for missions/quests.
+- [x] Add prerequisites for missions/quests.
 
 ### Content authoring
 
@@ -116,7 +116,7 @@
 ### Testing / quality
 
 - [x] Add tests for content-pack validation.
-- [ ] Add tests for quest progression.
+- [x] Add tests for quest progression.
 - [x] Add tests for combat once implemented.
 - [x] Add tests for interactive fishing once implemented.
 - [ ] Add tests for equipment stat changes.
