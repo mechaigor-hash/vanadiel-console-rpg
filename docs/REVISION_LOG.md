@@ -1,5 +1,11 @@
 # Revision Log
 
+## Revision 22 - GitHub pytest CI
+
+- Added `.github/workflows/test.yml` to run the Python pytest suite on pushes and pull requests to `main`.
+- CI installs the package with dev dependencies using Python 3.11, then runs `pytest -q`.
+- Updated README and TODO to mark CI complete and refresh the current local test count.
+
 ## Revision 21 - Quest prerequisite gating
 
 - Added a follow-up gate-guard quest that stays locked until `first_steps` is complete.

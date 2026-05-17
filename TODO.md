@@ -48,7 +48,7 @@
 - [x] Added README with run/test instructions and project checklist.
 - [x] Added revision log.
 - [x] Added automated tests.
-- [x] Test gate currently passing: `12 passed`.
+- [x] Test gate currently passing: `13 passed`.
 
 ## Needs done next
 
@@ -120,4 +120,4 @@
 - [x] Add tests for combat once implemented.
 - [x] Add tests for interactive fishing once implemented.
 - [ ] Add tests for equipment stat changes.
-- [ ] Add CI once GitHub repo exists.
+- [x] Add CI once GitHub repo exists.

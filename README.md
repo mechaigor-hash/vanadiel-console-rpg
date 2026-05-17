@@ -124,6 +124,7 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [x] Add inventory browser grouped by item type.
 - [x] Add help text.
 - [ ] Add terminal-width-aware layout.
+- [x] Add GitHub Actions pytest CI.
 - [ ] Package release builds.
 
 ## Discord project note
