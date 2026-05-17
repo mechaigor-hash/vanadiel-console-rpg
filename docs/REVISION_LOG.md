@@ -1,5 +1,13 @@
 # Revision Log
 
+## Revision 27 - Nation opening missions
+
+- Added first-pass nation opening missions for San d'Oria, Bastok, and Windurst.
+- San d'Oria starts from Trion and asks the player to scout Ronfaure by defeating an Orc.
+- Bastok starts from President Karst and asks for a Gustaberg copper-ore report.
+- Windurst starts from the Star Sybil and asks the player to read Sarutabaruta signs by defeating a Yagudo.
+- Mirrored the content into the web content pack and added seed/availability test coverage.
+
 ## Revision 26 - Starter job abilities
 
 - Added first-pass combat job abilities: Warrior Mighty Strike, Monk Chakra, Thief Sneak Attack, and caster Arcane Burst.

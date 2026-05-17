@@ -861,6 +861,66 @@
           "bronze_ingot": 1
         }
       }
+    },
+    {
+      "slug": "sandoria_mission_1_1_scout_ronfaure",
+      "title": "San d'Oria Mission 1-1: Scout Ronfaure",
+      "quest_type": "mission",
+      "start_npc_slug": "trion",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "defeat",
+          "mob_family": "Orc",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 120,
+        "items": {
+          "fire_crystal": 1
+        }
+      }
+    },
+    {
+      "slug": "bastok_mission_1_1_gustaberg_report",
+      "title": "Bastok Mission 1-1: Gustaberg Report",
+      "quest_type": "mission",
+      "start_npc_slug": "president_karst",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "gather",
+          "item": "copper_ore",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 120,
+        "items": {
+          "earth_crystal": 1
+        }
+      }
+    },
+    {
+      "slug": "windurst_mission_1_1_sarutabaruta_signs",
+      "title": "Windurst Mission 1-1: Sarutabaruta Signs",
+      "quest_type": "mission",
+      "start_npc_slug": "star_sybil",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "defeat",
+          "mob_family": "Yagudo",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 120,
+        "items": {
+          "wind_crystal": 1
+        }
+      }
     }
   ],
   "mobs": [

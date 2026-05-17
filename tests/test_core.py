@@ -127,6 +127,24 @@ def test_expanded_era_content_seeds_locations_npcs_and_mobs():
     assert wotg["name"] == "Southern San d'Oria (S)"
 
 
+def test_nation_opening_missions_are_seeded_and_available():
+    con = memory_db()
+    expected = {
+        "sandoria_mission_1_1_scout_ronfaure": "trion",
+        "bastok_mission_1_1_gustaberg_report": "president_karst",
+        "windurst_mission_1_1_sarutabaruta_signs": "star_sybil",
+    }
+    rows = con.execute("SELECT slug, start_npc_slug, quest_type FROM quests WHERE quest_type='mission'").fetchall()
+    seeded = {row["slug"]: row for row in rows}
+    assert expected.keys() <= seeded.keys()
+    for slug, npc in expected.items():
+        assert seeded[slug]["start_npc_slug"] == npc
+
+    cid = create_character(con, CharacterBuild("Missioner", "Hume", "Male", "Bastok", "Warrior", None))
+    available = {row["slug"] for row in available_quests(con, cid)}
+    assert expected.keys() <= available
+
+
 def test_quest_prerequisites_gate_followup_until_complete():
     con = memory_db()
     cid = create_character(con, CharacterBuild("Questor", "Hume", "Female", "San d'Oria", "Warrior", None))

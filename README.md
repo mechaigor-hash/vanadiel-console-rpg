@@ -59,6 +59,7 @@ pytest
 - Interactive fishing with reel/wait/slacken tension management.
 - Location-driven gathering/fishing: local nodes are listed from the character's current map.
 - Fishing split by water type: freshwater, saltwater, and ice fishing samples.
+- First-pass nation opening missions for San d'Oria, Bastok, and Windurst.
 
 ## Extending content
 
