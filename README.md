@@ -121,11 +121,12 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [ ] Continue fleshing out maps, NPCs, mobs, fish, recipes, mining/logging nodes.
 - [ ] Add balancing pass for races/jobs/subjobs.
 - [x] Add richer terminal UI screens and simple movement between menus.
+- [x] Add terminal-width-aware menu dividers and wrapping.
 - [x] Add travel menu and current-location display.
 - [x] Make combat/gathering menus use current-location mobs/nodes.
 - [x] Add inventory browser grouped by item type.
 - [x] Add help text.
-- [ ] Add terminal-width-aware layout.
+- [x] Add terminal-width-aware layout.
 - [x] Add GitHub Actions pytest CI.
 - [ ] Package release builds.
 

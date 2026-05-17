@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 30 - Terminal-width-aware layout
+
+- Added terminal width helpers with min/max clamps for compact and wide terminals.
+- Navigator dividers now size to the current terminal instead of a fixed 64 columns.
+- Menu labels and footer controls wrap cleanly on narrow terminals.
+- Added tests for layout helper wrapping and wide-terminal clamping.
+
 ## Revision 29 - Web save-slot manager
 
 - Added named browser save slots backed by localStorage keys.

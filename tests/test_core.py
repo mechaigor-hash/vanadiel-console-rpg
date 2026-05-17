@@ -3,12 +3,27 @@ from __future__ import annotations
 from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, equip_item, equipment_bonuses, equipped_items, init_db, list_inventory, load_content_pack, set_current_location, unequip_slot
 from vanadiel_console.models import CharacterBuild, calculate_stats
 from vanadiel_console.systems import accept_quest, apply_experience, auto_combat, available_quests, craft, defeat_mob, exp_to_next_level, fishing_attempt, fishing_nodes_for_water, gather, load_mob_combatant, load_player_combatant, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked, resolve_combat_turn, return_home_after_knockout
+from vanadiel_console.ui import divider, terminal_width, visible_len, wrap_line
 
 
 def memory_db():
     con = connect(":memory:")
     init_db(con)
     return con
+
+
+def test_terminal_layout_helpers_wrap_to_available_width(monkeypatch):
+    monkeypatch.setattr("shutil.get_terminal_size", lambda fallback: type("Size", (), {"columns": 32, "lines": 20})())
+    assert terminal_width() == 40
+    assert len(divider("═")) == 40
+    wrapped = wrap_line("A very long menu option label that should wrap for narrow terminals", indent="  1. ", subsequent="     ")
+    assert all(visible_len(line) <= 40 for line in wrapped.splitlines())
+    assert wrapped.splitlines()[1].startswith("     ")
+
+
+def test_terminal_layout_width_clamps_wide_terminals(monkeypatch):
+    monkeypatch.setattr("shutil.get_terminal_size", lambda fallback: type("Size", (), {"columns": 180, "lines": 40})())
+    assert terminal_width() == 96
 
 
 def test_core_content_pack_loads_from_json():

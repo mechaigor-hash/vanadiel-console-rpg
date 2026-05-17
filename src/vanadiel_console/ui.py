@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import re
+import shutil
+import textwrap
 from dataclasses import dataclass
 from typing import Callable
 
@@ -10,6 +13,25 @@ YELLOW = "\033[93m"
 RED = "\033[91m"
 BOLD = "\033[1m"
 DIM = "\033[2m"
+ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def visible_len(text: str) -> int:
+    return len(ANSI_RE.sub("", text))
+
+
+def terminal_width(min_width: int = 40, max_width: int = 96) -> int:
+    width = shutil.get_terminal_size((64, 20)).columns
+    return max(min_width, min(max_width, width))
+
+
+def divider(char: str = "─", width: int | None = None) -> str:
+    return char * (width or terminal_width())
+
+
+def wrap_line(text: str, indent: str = "", subsequent: str | None = None, width: int | None = None) -> str:
+    max_width = width or terminal_width()
+    return textwrap.fill(text, width=max_width, initial_indent=indent, subsequent_indent=subsequent or indent)
 
 
 @dataclass(frozen=True)
@@ -60,15 +82,18 @@ class Navigator:
 
     def render(self) -> None:
         screen = self.screens[self.current]
-        print(f"\n{CYAN}{'═' * 64}{RESET}")
-        print(f"{BOLD}{screen.title}{RESET}  {DIM}{self.breadcrumbs()}{RESET}")
-        print(f"{CYAN}{'─' * 64}{RESET}")
+        width = terminal_width()
+        print(f"\n{CYAN}{divider('═', width)}{RESET}")
+        heading = f"{screen.title}  {self.breadcrumbs()}"
+        print(wrap_line(heading, width=width))
+        print(f"{CYAN}{divider('─', width)}{RESET}")
         if screen.body:
             screen.body()
-            print(f"{CYAN}{'─' * 64}{RESET}")
+            print(f"{CYAN}{divider('─', width)}{RESET}")
         for option in screen.options:
-            print(f"  {YELLOW}{option.key}.{RESET} {option.label}")
-        print(f"  {YELLOW}b.{RESET} Back    {YELLOW}h.{RESET} Home    {YELLOW}q.{RESET} Quit")
+            label = wrap_line(option.label, indent=f"  {option.key}. ", subsequent="     ", width=width)
+            print(label)
+        print(wrap_line("b. Back    h. Home    q. Quit", indent="  ", subsequent="  ", width=width))
 
     def handle(self, raw: str) -> None:
         choice = raw.strip().lower()
