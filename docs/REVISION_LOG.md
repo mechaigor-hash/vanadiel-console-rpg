@@ -1,5 +1,11 @@
 # Revision Log
 
+## Revision 20 - Content schema documentation
+
+- Added `docs/CONTENT_SCHEMA.md` covering every top-level content-pack section: items, maps, NPCs, quests, mobs, loot, recipes, and gathering nodes.
+- Documented required/optional fields, known item/stat/data keys, cross-reference expectations, examples, validation rules, and a safe authoring order.
+- Linked the schema guide from the README and checked off the content-schema roadmap item in TODO.
+
 ## Revision 19 - Content-pack validation
 
 - Added friendly content-pack validation before seeding JSON into SQLite.

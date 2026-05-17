@@ -82,7 +82,7 @@
 ### Content authoring
 
 - [x] Add content-pack validation with friendly errors.
-- [ ] Document the JSON schema for items, mobs, maps, quests, NPCs, recipes, and gathering nodes.
+- [x] Document the JSON schema for items, mobs, maps, quests, NPCs, recipes, and gathering nodes.
 - [ ] Split bundled content into separate files by type once it grows.
 - [x] Add first pass of starter-zone mobs and loot tables.
 - [ ] Add deeper starter-zone mob coverage from wiki pages.

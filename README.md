@@ -74,6 +74,8 @@ Bundled starter content now lives in `src/vanadiel_console/data/core_content.jso
 
 The Python seeder can also load another JSON file with the same top-level keys, so future private/mod content can be added without editing code. Content packs are validated before seeding so missing fields, duplicate slugs, and bad map/NPC/item/mob/quest references produce friendly errors.
 
+See [`docs/CONTENT_SCHEMA.md`](docs/CONTENT_SCHEMA.md) for the content authoring schema, examples, validation rules, and authoring checklist.
+
 ## Repository
 
 Planned GitHub visibility: **public**.
@@ -104,12 +106,13 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [x] Move seed content into external data packs.
 - [x] Add public project TODO/checklist artifact.
 - [x] Create public GitHub repository and push commits.
-- [ ] Add content-pack validation with friendly error messages.
+- [x] Add content-pack validation with friendly error messages.
+- [x] Document the content-pack JSON authoring schema.
 - [ ] Add save-slot selection and better character management.
-- [ ] Add equipment equip/unequip and derived combat stats.
+- [x] Add equipment equip/unequip and derived combat stats.
 - [x] Add turn-based combat loop rather than instant sample victories.
 - [x] Add interactive fishing tension loop.
-- [ ] Add quest journal progression and completion rewards.
+- [x] Add quest journal progression and completion rewards.
 - [ ] Add nation-specific opening missions.
 - [x] Add first expanded 75-era/WotG seed slice for maps, NPCs, mobs, and loot.
 - [ ] Continue fleshing out maps, NPCs, mobs, fish, recipes, mining/logging nodes.
@@ -118,7 +121,8 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [x] Add travel menu and current-location display.
 - [x] Make combat/gathering menus use current-location mobs/nodes.
 - [x] Add inventory browser grouped by item type.
-- [ ] Add help text and terminal-width-aware layout.
+- [x] Add help text.
+- [ ] Add terminal-width-aware layout.
 - [ ] Package release builds.
 
 ## Discord project note
