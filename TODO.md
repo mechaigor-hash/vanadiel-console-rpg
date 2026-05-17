@@ -43,6 +43,7 @@
 - [x] Added SQLite equipment helpers and stat-change tests.
 - [x] Hardened GitHub CI with Python 3.11/3.12/3.13 matrix and compile step.
 - [x] Added level-up EXP thresholds and stat refresh.
+- [x] Added first-pass starter job abilities in combat.
 - [x] Added web portable JSON save export/import bridge.
 - [x] Added content-pack validation with friendly cross-reference errors.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
@@ -67,7 +68,7 @@
 - [x] Add proper turn-based combat instead of instant sample victories.
 - [x] Add HP/MP tracking during combat.
 - [x] Add starter spell casting in combat.
-- [ ] Add job abilities beyond basic spell casting.
+- [x] Add job abilities beyond basic spell casting.
 - [x] Add equipment equip/unequip flow.
 - [x] Add derived attack/defense/magic stats from gear.
 - [x] Add level-up rules and EXP thresholds.

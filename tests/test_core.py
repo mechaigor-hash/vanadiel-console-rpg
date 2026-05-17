@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, equip_item, equipment_bonuses, equipped_items, init_db, list_inventory, load_content_pack, set_current_location, unequip_slot
 from vanadiel_console.models import CharacterBuild, calculate_stats
-from vanadiel_console.systems import accept_quest, apply_experience, auto_combat, available_quests, craft, defeat_mob, exp_to_next_level, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked, return_home_after_knockout
+from vanadiel_console.systems import accept_quest, apply_experience, auto_combat, available_quests, craft, defeat_mob, exp_to_next_level, fishing_attempt, fishing_nodes_for_water, gather, load_mob_combatant, load_player_combatant, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked, resolve_combat_turn, return_home_after_knockout
 
 
 def memory_db():
@@ -147,6 +147,30 @@ def test_quest_prerequisites_gate_followup_until_complete():
     accept_quest(con, cid, "gate_guard_followup")
     active = con.execute("SELECT status FROM character_quests WHERE character_id=? AND quest_slug='gate_guard_followup'", (cid,)).fetchone()
     assert active["status"] == "active"
+
+
+def test_starter_job_ability_affects_combat(monkeypatch):
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Striker", "Hume", "Male", "Bastok", "Warrior", None))
+    player = load_player_combatant(con, cid)
+    mob = load_mob_combatant(con, "forest_hare_l2")
+    before_hp = mob.hp
+    monkeypatch.setattr("random.randint", lambda a, b: b)
+    log = resolve_combat_turn(player, mob, "ability")
+    assert mob.hp < before_hp
+    assert any("Mighty Strike" in line for line in log)
+
+
+def test_monk_job_ability_heals(monkeypatch):
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Healer", "Hume", "Male", "Bastok", "Monk", None))
+    player = load_player_combatant(con, cid)
+    mob = load_mob_combatant(con, "forest_hare_l2")
+    player.hp = 5
+    monkeypatch.setattr("random.randint", lambda a, b: a)
+    log = resolve_combat_turn(player, mob, "ability")
+    assert player.hp > 5
+    assert any("Chakra" in line for line in log)
 
 
 def test_experience_thresholds_level_character_and_refresh_stats():

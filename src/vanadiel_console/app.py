@@ -318,16 +318,19 @@ def combat_screen(con: sqlite3.Connection, character_id: int, mob_slug: str) -> 
         print(f"\n{GREEN}{player.name}{RESET} HP {max(0, player.hp)} MP {player.mp}  vs  {RED}{mob.name}{RESET} HP {max(0, mob.hp)} MP {mob.mp}")
         print("  1. Attack")
         print("  2. Cast spell")
-        print("  3. Defend")
-        print("  4. Flee")
+        print("  3. Job ability")
+        print("  4. Defend")
+        print("  5. Flee")
         choice = input("> ").strip()
         if choice == "1":
             action = "attack"
         elif choice == "2":
             action = "cast"
         elif choice == "3":
-            action = "defend"
+            action = "ability"
         elif choice == "4":
+            action = "defend"
+        elif choice == "5":
             import random
 
             if random.randint(1, 100) <= 55:

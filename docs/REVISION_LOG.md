@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 26 - Starter job abilities
+
+- Added first-pass combat job abilities: Warrior Mighty Strike, Monk Chakra, Thief Sneak Attack, and caster Arcane Burst.
+- Combatants now carry job metadata so combat resolution can branch by job.
+- Added a Job Ability option to terminal combat.
+- Added tests for Warrior damage ability and Monk healing ability.
+
 ## Revision 25 - Knockout return-home handling
 
 - Added `return_home_after_knockout()` to recover defeated characters at their nation home point.

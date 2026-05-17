@@ -22,6 +22,7 @@ class Combatant:
     int_: int
     mnd: int
     level: int = 1
+    job: str | None = None
 
 
 @dataclass
@@ -124,6 +125,7 @@ def load_player_combatant(con: sqlite3.Connection, character_id: int) -> Combata
         int_=row["int"],
         mnd=row["mnd"],
         level=row["level"],
+        job=row["main_job"],
     )
 
 
@@ -144,6 +146,7 @@ def load_mob_combatant(con: sqlite3.Connection, mob_slug: str) -> Combatant:
         int_=int(stats.get("int", 4 + level)),
         mnd=int(stats.get("mnd", 4 + level)),
         level=level,
+        job=row["job"],
     )
 
 
@@ -166,6 +169,33 @@ def spell_damage(caster: Combatant, target: Combatant) -> tuple[str, int, int]:
     return "fizzle", 0, 0
 
 
+
+def job_ability(player: Combatant, mob: Combatant) -> list[str]:
+    """Resolve a first-pass starter job ability for the player."""
+    job = player.job or "Adventurer"
+    if job == "Warrior":
+        dmg = max(2, player.str_ + player.level + random.randint(2, 6) - mob.vit // 3)
+        mob.hp -= dmg
+        return [f"{player.name} uses Mighty Strike for {dmg} damage."]
+    if job == "Monk":
+        healed = max(4, player.vit + player.level)
+        player.hp += healed
+        return [f"{player.name} uses Chakra and recovers {healed} HP."]
+    if job == "Thief":
+        dmg = max(2, player.dex + player.agi // 2 + random.randint(1, 6) - mob.agi // 3)
+        mob.hp -= dmg
+        return [f"{player.name} uses Sneak Attack for {dmg} damage."]
+    if job in {"White Mage", "Black Mage", "Red Mage"}:
+        if player.mp < 3:
+            return [f"{player.name} focuses, but lacks MP."]
+        player.mp -= 3
+        dmg = max(3, player.int_ + player.mnd // 2 + random.randint(2, 6) - mob.mnd // 4)
+        mob.hp -= dmg
+        return [f"{player.name} uses Arcane Burst for {dmg} damage. (-3 MP)"]
+    dmg = max(1, player.str_ + random.randint(1, 3) - mob.vit // 3)
+    mob.hp -= dmg
+    return [f"{player.name} improvises for {dmg} damage."]
+
 def resolve_combat_turn(player: Combatant, mob: Combatant, action: str) -> list[str]:
     """Resolve one player action and one mob response in-place."""
     log: list[str] = []
@@ -184,6 +214,8 @@ def resolve_combat_turn(player: Combatant, mob: Combatant, action: str) -> list[
             player.mp -= cost
             mob.hp -= dmg
             log.append(f"{player.name} casts {spell} for {dmg} damage. (-{cost} MP)")
+    elif action == "ability":
+        log.extend(job_ability(player, mob))
     elif action == "defend":
         defend_bonus = max(2, player.vit // 2)
         log.append(f"{player.name} braces for impact.")

@@ -54,7 +54,7 @@ pytest
 - Extensible seed tables for maps, NPCs, mobs, quests/main missions, crafting, fishing, mining, and resource gathering.
 - Expanded 75-era-through-Wings-of-the-Goddess seed slice: starter cities/fields, classic party zones, WotG past zones, representative NPCs, and 30+ representative mobs up to level 72 campaign-style enemies.
 - Weighted mob loot tables, including a level 5 White Mage Yagudo sample that can drop WHM-flavoured gear/scrolls.
-- Interactive turn-based combat with attack, cast, defend, flee, EXP, and loot payout.
+- Interactive turn-based combat with attack, cast, job ability, defend, flee, EXP, and loot payout.
 - Location-driven combat: local encounters are listed from the character's current map.
 - Interactive fishing with reel/wait/slacken tension management.
 - Location-driven gathering/fishing: local nodes are listed from the character's current map.
