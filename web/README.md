@@ -27,7 +27,7 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 - World screen showing local NPCs, mobs, and gathering nodes.
 - Region/map travel screen.
 - Clickable local combat prototype.
-- Clickable local gathering/fishing prototype.
+- Clickable local gathering prototype plus fishing mini-game with reel/wait/slacken choices.
 - Inventory screen grouped by item kind.
 - Database summary screen.
 - Modular engine scaffolding:
@@ -40,13 +40,14 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
   - `assets/images/`
   - `assets/sounds/`
 - SVG placeholder art for hero portrait, map/world, combat, and gathering panels.
+- Web Audio synth placeholder sounds for UI confirm/cancel, combat hits, spell casting, fishing tension, and catches.
 
 ## Engine direction
 
 Keep the Python/SQLite version as the data/prototype backend for now. The web client should grow into the main presentation/gameplay layer with:
 
 - asset loading
-- sound manager
+- richer file-backed sound packs to replace the current synth placeholders
 - scene/screen router
 - entity/component-ish data objects
 - combat system module

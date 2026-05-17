@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 13 - Web sound placeholders and fishing HUD
+
+- Added Web Audio synth sound placeholders for UI confirm/cancel, combat hits, spell casting, fishing tension, and catches.
+- Added `web/assets/sounds/README.md` documenting how to swap synth placeholders for future audio files.
+- Replaced one-click web fishing with a reel/wait/slacken mini-game using progress, line tension, and patience HUD bars.
+- Wired combat, character creation, travel, gathering, and fishing actions to the sound manager.
+
 ## Revision 12 - Web placeholder art and combat HUD
 
 - Added SVG placeholder art assets for hero portrait, map/world, combat, and gathering panels.

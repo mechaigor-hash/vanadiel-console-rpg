@@ -25,6 +25,7 @@ const addLog = (text) => {
 
 const setScreen = (screen) => {
   state.screen = screen;
+  if (screen !== "gathering") state.fishing = null;
   document.querySelectorAll("[data-screen]").forEach((b) => b.classList.toggle("active", b.dataset.screen === screen));
   render();
 };
@@ -87,6 +88,7 @@ function openCreator() {
     STARTING_GEAR[state.character.mainJob].forEach((item) => addItem(item));
     document.querySelector(".modal-backdrop").remove();
     addLog(`${state.character.name} begins in ${mapName(state.character.currentMap)}.`);
+    assets.play("ui_confirm");
     render();
   });
 }
@@ -149,13 +151,13 @@ function playerDamage() { return Math.max(1, state.character.stats.str + Math.fl
 function mobDamage() { return Math.max(1, (state.combat.mob.stats?.str ?? 5 + state.combat.mob.level) + roll(0, 3) - Math.floor(state.character.stats.vit / 2)); }
 function combatAction(action) {
   if (!state.combat) return;
-  if (action === "attack") { const dmg = playerDamage(); state.combat.hp -= dmg; addLog(`You hit ${state.combat.mob.name} for ${dmg}.`); }
+  if (action === "attack") { const dmg = playerDamage(); state.combat.hp -= dmg; addLog(`You hit ${state.combat.mob.name} for ${dmg}.`); assets.play("combat_hit"); }
   if (action === "cast") {
     if (state.character.mp < 4) addLog("Not enough MP.");
-    else { state.character.mp -= 4; const dmg = Math.max(2, Math.floor(state.character.stats.int / 2) + roll(1, 6)); state.combat.hp -= dmg; addLog(`You cast for ${dmg}.`); }
+    else { state.character.mp -= 4; const dmg = Math.max(2, Math.floor(state.character.stats.int / 2) + roll(1, 6)); state.combat.hp -= dmg; addLog(`You cast for ${dmg}.`); assets.play("spell_cast"); }
   }
   if (action === "defend") addLog("You brace for impact.");
-  if (action === "flee") { if (roll(1, 100) <= 55) { addLog("You escaped."); state.combat = null; return render(); } addLog("Couldn't escape!"); }
+  if (action === "flee") { if (roll(1, 100) <= 55) { addLog("You escaped."); assets.play("ui_cancel"); state.combat = null; return render(); } addLog("Couldn't escape!"); }
   if (state.combat.hp <= 0) { state.character.exp += state.combat.mob.level * 20; addLog(`${state.combat.mob.name} defeated! EXP +${state.combat.mob.level * 20}.`); state.combat = null; return render(); }
   const incoming = action === "defend" ? Math.max(1, Math.floor(mobDamage() / 2)) : mobDamage();
   state.character.hp -= incoming;
@@ -184,15 +186,64 @@ function renderCombat() {
 
 function renderGathering() {
   els.title.textContent = "Gathering";
+  if (state.fishing) return renderFishing();
   const nodes = state.character ? localNodes() : [];
-  els.screen.innerHTML = `<div class="hero-art" style="--art: url('assets/images/gathering-placeholder.svg')"></div>` + (nodes.length ? `<div class="card-grid">${nodes.map((n) => card(n.slug, `Kind: ${n.kind}`, [mapName(n.map_slug)], `<button data-node="${n.slug}">Use Node</button>`)).join("")}</div>` : `<p>No local gathering nodes. Travel to a zone with fishing/mining.</p>`);
+  els.screen.innerHTML = `<div class="hero-art" style="--art: url('assets/images/gathering-placeholder.svg')"></div>` + (nodes.length ? `<div class="card-grid">${nodes.map((n) => {
+    const isFishing = n.kind.includes("fishing");
+    return card(n.slug, `Kind: ${n.kind}`, [mapName(n.map_slug), isFishing ? "reel mini-game" : "quick gather"], `<button data-node="${n.slug}">${isFishing ? "Cast Line" : "Use Node"}</button>`);
+  }).join("")}</div>` : `<p>No local gathering nodes. Travel to a zone with fishing/mining.</p>`);
   els.screen.querySelectorAll("[data-node]").forEach((b) => b.addEventListener("click", () => useNode(content.nodeBySlug[b.dataset.node])));
 }
+
+function startFishing(node) {
+  state.fishing = { node, progress: 0, tension: 38, patience: 8, loot: weighted(node.loot_table.map((x) => [x.item, x.weight])) };
+  addLog(`You cast into ${mapName(node.map_slug)}. Watch the line tension.`);
+  assets.play("fish_tension");
+  renderFishing();
+}
+
+function fishingAction(action) {
+  const fish = state.fishing;
+  if (!fish) return;
+  if (action === "reel") { fish.progress += roll(12, 22); fish.tension += roll(12, 20); addLog("You reel hard and the catch draws closer."); }
+  if (action === "wait") { fish.progress += roll(4, 10); fish.tension += roll(-5, 8); addLog("You wait for the bite to settle."); }
+  if (action === "slacken") { fish.tension -= roll(12, 22); fish.progress -= roll(0, 5); addLog("You slacken the line to save the hook."); }
+  fish.tension = Math.max(0, Math.min(100, fish.tension));
+  fish.progress = Math.max(0, Math.min(100, fish.progress));
+  fish.patience -= 1;
+  assets.play("fish_tension");
+  if (fish.tension >= 95) { addLog("The line snapped! The fish got away."); state.fishing = null; assets.play("ui_cancel"); return renderGathering(); }
+  if (fish.patience <= 0 && fish.progress < 100) { addLog("The bite faded before you could land it."); state.fishing = null; assets.play("ui_cancel"); return renderGathering(); }
+  if (fish.progress >= 100) {
+    addItem(fish.loot);
+    addLog(`Landed ${content.itemBySlug[fish.loot]?.name ?? fish.loot}!`);
+    state.fishing = null;
+    assets.play("fish_catch");
+    return renderGathering();
+  }
+  renderFishing();
+}
+
+function renderFishing() {
+  const fish = state.fishing;
+  els.screen.innerHTML = `
+    <div class="hero-art" style="--art: url('assets/images/gathering-placeholder.svg')"></div>
+    <div class="hud-row">
+      <div class="hud-box"><strong>Catch Progress</strong>${fish.progress}% landed<div class="bar"><span style="--value:${fish.progress}%"></span></div></div>
+      <div class="hud-box"><strong>Line Tension</strong>${fish.tension}% strain<div class="bar enemy"><span style="--value:${fish.tension}%"></span></div></div>
+      <div class="hud-box"><strong>Patience</strong>${fish.patience} turns before the bite fades</div>
+    </div>
+    <p>Balance progress against tension. Reel advances fastest, wait steadies the bite, slacken saves a dangerous line.</p>
+    <div class="top-actions"><button data-fish="reel">Reel</button><button data-fish="wait">Wait</button><button data-fish="slacken">Slacken</button></div>`;
+  els.screen.querySelectorAll("[data-fish]").forEach((b) => b.addEventListener("click", () => fishingAction(b.dataset.fish)));
+}
+
 function useNode(node) {
+  if (node.kind.includes("fishing")) return startFishing(node);
   const loot = weighted(node.loot_table.map((x) => [x.item, x.weight]));
   addItem(loot);
-  addLog(`${node.kind.includes("fishing") ? "Caught" : "Gathered"} ${content.itemBySlug[loot]?.name ?? loot}.`);
-  assets.play(node.kind.includes("fishing") ? "fish_catch" : "ui_confirm");
+  addLog(`Gathered ${content.itemBySlug[loot]?.name ?? loot}.`);
+  assets.play("ui_confirm");
   render();
 }
 

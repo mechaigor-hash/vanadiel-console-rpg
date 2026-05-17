@@ -34,6 +34,8 @@
 - [x] Split browser engine scaffolding into constants/content/state/utils/assets modules.
 - [x] Added SVG placeholder art for hero, map/world, combat, and gathering panels.
 - [x] Added combat HUD bars in the web UI.
+- [x] Added Web Audio synth placeholders for UI/combat/spell/fishing feedback.
+- [x] Added web fishing HUD mini-game with reel/wait/slacken tension management.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -102,7 +104,7 @@
 - [x] Split web engine into modules.
 - [x] Add image/sound asset manager scaffold.
 - [x] Add sprite/map placeholder image assets.
-- [ ] Add sample UI/combat/fishing sounds.
+- [x] Add sample UI/combat/fishing sounds.
 - [ ] Sync web client with SQLite/backend or add export/import bridge.
 
 ### Testing / quality
