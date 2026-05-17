@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 22 - SQLite equipment helpers and tests
+
+- Added Python equipment helpers for item data lookup, equipped item listing, derived attack/defense/magic bonuses, equip, and unequip.
+- Equipment now moves items between carried inventory and equipped slots with job restriction checks.
+- Added tests covering equipment bonus changes, slot movement, unequip restoration, and wrong-job rejection.
+- Verified the existing GitHub Actions pytest workflow remains present.
+
 ## Revision 22 - GitHub pytest CI
 
 - Added `.github/workflows/test.yml` to run the Python pytest suite on pushes and pull requests to `main`.

@@ -399,6 +399,77 @@ def add_item(con: sqlite3.Connection, character_id: int, item_slug: str, qty: in
     )
 
 
+def item_data(con: sqlite3.Connection, item_slug: str) -> dict:
+    row = con.execute("SELECT data_json FROM items WHERE slug = ?", (item_slug,)).fetchone()
+    if not row:
+        raise ValueError(f"Unknown item slug: {item_slug}")
+    return json.loads(row["data_json"] or "{}")
+
+
+def equipped_items(con: sqlite3.Connection, character_id: int) -> list[sqlite3.Row]:
+    return con.execute(
+        """SELECT i.slug, i.name, i.kind, i.data_json, inv.equipped_slot
+        FROM inventory inv JOIN items i ON i.id = inv.item_id
+        WHERE inv.character_id = ? AND inv.equipped_slot IS NOT NULL
+        ORDER BY inv.equipped_slot""",
+        (character_id,),
+    ).fetchall()
+
+
+def equipment_bonuses(con: sqlite3.Connection, character_id: int) -> dict[str, int]:
+    bonuses = {"attack": 0, "defense": 0, "magic": 0}
+    for row in equipped_items(con, character_id):
+        data = json.loads(row["data_json"] or "{}")
+        bonuses["attack"] += int(data.get("damage", 0))
+        bonuses["defense"] += int(data.get("defense", 0))
+        bonuses["magic"] += int(data.get("magic", 0))
+    return bonuses
+
+
+def unequip_slot(con: sqlite3.Connection, character_id: int, slot: str) -> None:
+    row = con.execute(
+        """SELECT i.slug FROM inventory inv JOIN items i ON i.id = inv.item_id
+        WHERE inv.character_id = ? AND inv.equipped_slot = ?""",
+        (character_id, slot),
+    ).fetchone()
+    if not row:
+        return
+    con.execute("DELETE FROM inventory WHERE character_id = ? AND equipped_slot = ?", (character_id, slot))
+    add_item(con, character_id, row["slug"], 1)
+    con.commit()
+
+
+def equip_item(con: sqlite3.Connection, character_id: int, item_slug: str) -> str:
+    item = con.execute("SELECT id, name, data_json FROM items WHERE slug = ?", (item_slug,)).fetchone()
+    if not item:
+        raise ValueError(f"Unknown item slug: {item_slug}")
+    data = json.loads(item["data_json"] or "{}")
+    slot = data.get("slot")
+    if not slot:
+        raise ValueError(f"Item cannot be equipped: {item_slug}")
+    character = con.execute("SELECT main_job FROM characters WHERE id = ?", (character_id,)).fetchone()
+    if not character:
+        raise ValueError(f"Unknown character id: {character_id}")
+    allowed_jobs = data.get("jobs")
+    if allowed_jobs and character["main_job"] not in allowed_jobs:
+        raise ValueError(f"{character['main_job']} cannot equip {item['name']}")
+    carried = con.execute(
+        """SELECT inv.rowid, inv.quantity FROM inventory inv
+        WHERE inv.character_id = ? AND inv.item_id = ? AND inv.equipped_slot IS NULL""",
+        (character_id, item["id"]),
+    ).fetchone()
+    if not carried or carried["quantity"] < 1:
+        raise ValueError(f"Item is not in inventory: {item_slug}")
+    unequip_slot(con, character_id, slot)
+    if carried["quantity"] == 1:
+        con.execute("DELETE FROM inventory WHERE rowid = ?", (carried["rowid"],))
+    else:
+        con.execute("UPDATE inventory SET quantity = quantity - 1 WHERE rowid = ?", (carried["rowid"],))
+    add_item(con, character_id, item_slug, 1, slot)
+    con.commit()
+    return slot
+
+
 def list_inventory(con: sqlite3.Connection, character_id: int) -> list[sqlite3.Row]:
     return con.execute(
         """SELECT i.slug, i.name, i.kind, inv.quantity, inv.equipped_slot

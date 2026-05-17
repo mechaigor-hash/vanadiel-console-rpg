@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, init_db, list_inventory, load_content_pack, set_current_location
+from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, equip_item, equipment_bonuses, equipped_items, init_db, list_inventory, load_content_pack, set_current_location, unequip_slot
 from vanadiel_console.models import CharacterBuild, calculate_stats
 from vanadiel_console.systems import accept_quest, auto_combat, available_quests, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked
 
@@ -64,6 +64,37 @@ def test_inventory_rows_include_kind_for_grouped_ui():
     kinds = {row["kind"] for row in rows}
     assert "weapon" in kinds
     assert "armor" in kinds
+
+
+def test_equipment_flow_changes_derived_bonuses_and_inventory_slots():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Gearcheck", "Hume", "Male", "Bastok", "Warrior", None))
+    assert equipment_bonuses(con, cid) == {"attack": 0, "defense": 0, "magic": 0}
+
+    assert equip_item(con, cid, "bronze_sword") == "main"
+    assert equip_item(con, cid, "bronze_harness") == "body"
+    bonuses = equipment_bonuses(con, cid)
+    assert bonuses["attack"] == 4
+    assert bonuses["defense"] == 2
+    slots = {row["equipped_slot"] for row in equipped_items(con, cid)}
+    assert slots == {"main", "body"}
+
+    unequip_slot(con, cid, "main")
+    assert equipment_bonuses(con, cid)["attack"] == 0
+    carried = {row["slug"]: row for row in list_inventory(con, cid) if row["equipped_slot"] is None}
+    assert carried["bronze_sword"]["quantity"] == 1
+
+
+def test_equipment_rejects_wrong_job_gear():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Mage", "Hume", "Female", "Windurst", "White Mage", None))
+    add_item(con, cid, "bronze_sword", 1)
+    try:
+        equip_item(con, cid, "bronze_sword")
+    except ValueError as exc:
+        assert "cannot equip" in str(exc)
+    else:
+        raise AssertionError("Expected wrong-job equipment to be rejected")
 
 
 def test_character_location_can_be_changed_for_travel():

@@ -40,6 +40,7 @@
 - [x] Added web quest objective progress tracking and reward payout.
 - [x] Added web quest journal with active/completed/available quest groups.
 - [x] Added web equipment equip/unequip screen and combat stat bonuses.
+- [x] Added SQLite equipment helpers and stat-change tests.
 - [x] Added web portable JSON save export/import bridge.
 - [x] Added content-pack validation with friendly cross-reference errors.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
@@ -119,5 +120,5 @@
 - [x] Add tests for quest progression.
 - [x] Add tests for combat once implemented.
 - [x] Add tests for interactive fishing once implemented.
-- [ ] Add tests for equipment stat changes.
+- [x] Add tests for equipment stat changes.
 - [x] Add CI once GitHub repo exists.
