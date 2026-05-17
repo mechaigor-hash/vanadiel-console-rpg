@@ -1,7 +1,7 @@
 import { AssetManager, defaultManifest } from "./engine/assets.js";
 import { loadContentPack } from "./engine/content.js";
 import { JOBS, NATIONS, RACES, STARTING_GEAR, STATS } from "./engine/constants.js";
-import { applySave, loadGame, saveGame, serializableState, state } from "./engine/state.js";
+import { applySave, deleteSaveSlot, listSaveSlots, loadGame, saveGame, serializableState, state } from "./engine/state.js";
 import { addStats, card, roll, slugify, weighted } from "./engine/utils.js";
 
 const els = {
@@ -59,16 +59,25 @@ function addItem(name, qty = 1) {
   else state.inventory.push({ ...item, qty });
 }
 
-function save() {
-  saveGame();
-  addLog("Game saved to browser local storage.");
+function save(slot = state.character?.name ? slugify(state.character.name) : "autosave") {
+  if (!state.character) return addLog("Create or load a character before saving.");
+  saveGame(slot);
+  addLog(`Game saved to slot: ${slot}.`);
   assets.play("ui_confirm");
+  renderSaveManager();
 }
 
-function load() {
-  if (!loadGame()) return addLog("No browser save found.");
-  addLog("Game loaded.");
+function load(slot = "autosave") {
+  if (!loadGame(slot)) return addLog(`No browser save found for slot: ${slot}.`);
+  addLog(`Game loaded from slot: ${slot}.`);
   render();
+}
+
+function deleteSlot(slot) {
+  deleteSaveSlot(slot);
+  addLog(`Deleted save slot: ${slot}.`);
+  assets.play("ui_cancel");
+  renderSaveManager();
 }
 
 function exportSave() {
@@ -90,8 +99,9 @@ async function importSave(file) {
   try {
     const save = JSON.parse(await file.text());
     applySave(save);
-    saveGame();
-    addLog(`Imported save${state.character ? ` for ${state.character.name}` : ""}.`);
+    const slot = state.character?.name ? slugify(state.character.name) : "imported";
+    saveGame(slot);
+    addLog(`Imported save${state.character ? ` for ${state.character.name}` : ""} into slot: ${slot}.`);
     assets.play("ui_confirm");
     render();
   } catch (error) {
@@ -534,6 +544,21 @@ function renderInventory() {
   els.screen.innerHTML = kinds.map((k) => `<h2>${k}</h2><div class="card-grid">${state.inventory.filter((i) => i.kind === k).map((i) => card(i.name, `Quantity: ${i.qty}`, [i.slug])).join("")}</div>`).join("");
 }
 
+function renderSaveManager() {
+  els.title.textContent = "Save Slots";
+  const slots = listSaveSlots();
+  const active = state.character ? card("Current Character", `${state.character.name} • Lv${state.character.level} ${state.character.mainJob} • ${mapName(state.character.currentMap)}`, ["loaded"], `<button data-save-slot="${slugify(state.character.name)}">Save Character Slot</button><button data-save-slot="autosave">Save Autosave</button>`) : card("No Character Loaded", "Create, import, or load a character to manage saves.", ["empty"], `<button data-new-character>New Character</button>`);
+  const slotCards = slots.map((slot) => {
+    const details = `${slot.characterName} • Lv${slot.level} ${slot.job} • ${slot.nation}<br>Location: ${mapName(slot.currentMap)}<br>Saved: ${slot.exportedAt ? new Date(slot.exportedAt).toLocaleString() : "unknown"}`;
+    return card(slot.slot, details, ["save", slot.nation], `<button data-load-slot="${slot.slot}">Load</button><button data-delete-slot="${slot.slot}">Delete</button>`);
+  }).join("");
+  els.screen.innerHTML = `<div class="hero-art" style="--art: url('assets/images/map-placeholder.svg')"></div><h2>Current</h2><div class="card-grid">${active}</div><h2>Browser Save Slots</h2>${slotCards ? `<div class="card-grid">${slotCards}</div>` : `<p>No browser save slots yet.</p>`}`;
+  els.screen.querySelectorAll("[data-save-slot]").forEach((b) => b.addEventListener("click", () => save(b.dataset.saveSlot)));
+  els.screen.querySelectorAll("[data-load-slot]").forEach((b) => b.addEventListener("click", () => load(b.dataset.loadSlot)));
+  els.screen.querySelectorAll("[data-delete-slot]").forEach((b) => b.addEventListener("click", () => deleteSlot(b.dataset.deleteSlot)));
+  els.screen.querySelectorAll("[data-new-character]").forEach((b) => b.addEventListener("click", openCreator));
+}
+
 function renderContent() {
   els.title.textContent = "Database";
   els.screen.innerHTML = `<div class="card-grid">
@@ -547,7 +572,7 @@ function renderContent() {
 function render() {
   renderCharacter();
   if (!state.character && state.screen !== "content") els.screen.innerHTML = `<p>Create a character to begin.</p>`;
-  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, quests: renderQuestJournal, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, equipment: renderEquipment, content: renderContent };
+  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, quests: renderQuestJournal, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, equipment: renderEquipment, saves: renderSaveManager, content: renderContent };
   (routes[state.screen] ?? renderWorld)();
 }
 
@@ -556,8 +581,8 @@ async function boot() {
   assets = new AssetManager(defaultManifest);
   await assets.preload();
   document.querySelector("#newGameBtn").addEventListener("click", openCreator);
-  document.querySelector("#saveBtn").addEventListener("click", save);
-  document.querySelector("#loadBtn").addEventListener("click", load);
+  document.querySelector("#saveBtn").addEventListener("click", () => save());
+  document.querySelector("#loadBtn").addEventListener("click", () => setScreen("saves"));
   document.querySelector("#exportBtn").addEventListener("click", exportSave);
   document.querySelector("#importBtn").addEventListener("click", () => document.querySelector("#importInput").click());
   document.querySelector("#importInput").addEventListener("change", (event) => importSave(event.target.files[0]));

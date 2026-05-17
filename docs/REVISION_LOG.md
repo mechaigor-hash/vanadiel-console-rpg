@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 29 - Web save-slot manager
+
+- Added named browser save slots backed by localStorage keys.
+- Added a Save Slots screen for saving, loading, and deleting character slots.
+- Kept legacy autosave loading compatibility for existing browser saves.
+- Imports now persist into a character-named slot instead of overwriting a single save key.
+
 ## Revision 28 - Web job ability combat actions
 
 - Added a web combat Job Ability button that labels itself from the character's main job.

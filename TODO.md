@@ -45,6 +45,7 @@
 - [x] Added level-up EXP thresholds and stat refresh.
 - [x] Added first-pass starter job abilities in combat.
 - [x] Added first-pass nation opening missions for San d'Oria, Bastok, and Windurst.
+- [x] Added web save-slot character manager.
 - [x] Added web portable JSON save export/import bridge.
 - [x] Added content-pack validation with friendly cross-reference errors.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
