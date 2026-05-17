@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 15 - Web quest progress and rewards
+
+- Added quest objective progress tracking for defeat and gather objectives in the web client.
+- Combat victories now advance matching defeat objectives; gathering and fishing catches advance matching gather objectives.
+- NPC quest cards now show progress, unlock completion when ready, and pay gil/item rewards.
+- Save/load now persists quest progress alongside accepted/completed quests.
+
 ## Revision 14 - Web NPC interaction screen
 
 - Added an NPC screen to the web sidebar and world screen quick action.

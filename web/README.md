@@ -22,10 +22,10 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 
 - HTML/CSS layout with three panels: character/sidebar, main stage, event log.
 - Character creation modal.
-- Browser localStorage save/load for character, inventory, and accepted quests.
+- Browser localStorage save/load for character, inventory, accepted/completed quests, and quest progress.
 - Loads `core_content.json` generated from the Python content pack.
 - World screen showing local NPCs, mobs, and gathering nodes.
-- NPC interaction screen with dialogue, quest summaries, and quest acceptance tracking.
+- NPC interaction screen with dialogue, quest summaries, quest acceptance, objective progress, completion, and rewards.
 - Region/map travel screen.
 - Clickable local combat prototype.
 - Clickable local gathering prototype plus fishing mini-game with reel/wait/slacken choices.

@@ -44,6 +44,7 @@ function makeCharacter(form) {
     subJob: sub,
     level: 1,
     exp: 0,
+    gil: 0,
     currentMap: NATIONS[form.nation.value].start,
     stats,
     hp: stats.hp,
@@ -87,6 +88,7 @@ function openCreator() {
     state.inventory = [];
     state.activeQuests = [];
     state.completedQuests = [];
+    state.questProgress = {};
     STARTING_GEAR[state.character.mainJob].forEach((item) => addItem(item));
     document.querySelector(".modal-backdrop").remove();
     addLog(`${state.character.name} begins in ${mapName(state.character.currentMap)}.`);
@@ -114,7 +116,7 @@ function renderCharacter() {
     return;
   }
   els.charName.textContent = c.name;
-  els.charSummary.textContent = `Lv${c.level} ${c.race} ${c.mainJob}${c.subJob ? "/" + c.subJob : ""} • ${mapName(c.currentMap)}`;
+  els.charSummary.textContent = `Lv${c.level} ${c.race} ${c.mainJob}${c.subJob ? "/" + c.subJob : ""} • ${mapName(c.currentMap)} • ${c.gil ?? 0} gil`;
   els.statGrid.innerHTML = STATS.map((s) => `<div class="stat"><span>${s.toUpperCase()}</span>${c.stats[s]}</div>`).join("");
 }
 
@@ -131,6 +133,55 @@ function renderWorld() {
       ${card("Nodes here", localNodes().length ? localNodes().map((n) => n.kind).join(", ") : "No gathering nodes seeded for this map yet.", ["gathering"])}
     </div>`;
   els.screen.querySelectorAll("[data-open-npcs]").forEach((b) => b.addEventListener("click", () => setScreen("npcs")));
+}
+
+function questObjectiveKey(objective) {
+  if (objective.type === "defeat") return `defeat:${objective.mob_family}`;
+  if (objective.type === "gather") return `gather:${objective.item}`;
+  return `${objective.type}:${objective.item ?? objective.mob_family ?? "any"}`;
+}
+
+function questProgress(slug, objective) {
+  return state.questProgress[slug]?.[questObjectiveKey(objective)] ?? 0;
+}
+
+function updateQuestProgress(kind, value, qty = 1) {
+  for (const slug of state.activeQuests) {
+    if (state.completedQuests.includes(slug)) continue;
+    const quest = content.questBySlug[slug];
+    let changed = false;
+    for (const objective of quest.objectives ?? []) {
+      const matchesDefeat = kind === "defeat" && objective.type === "defeat" && objective.mob_family === value;
+      const matchesGather = kind === "gather" && objective.type === "gather" && objective.item === value;
+      if (!matchesDefeat && !matchesGather) continue;
+      state.questProgress[slug] ??= {};
+      const key = questObjectiveKey(objective);
+      const next = Math.min(objective.count ?? 1, (state.questProgress[slug][key] ?? 0) + qty);
+      state.questProgress[slug][key] = next;
+      changed = true;
+    }
+    if (changed && isQuestReady(quest)) addLog(`Quest objective complete: ${quest.title}. Return to the quest NPC.`);
+  }
+}
+
+function isQuestReady(quest) {
+  return (quest.objectives ?? []).every((objective) => questProgress(quest.slug, objective) >= (objective.count ?? 1));
+}
+
+function questProgressText(quest) {
+  return (quest.objectives ?? []).map((objective) => `${questProgress(quest.slug, objective)}/${objective.count ?? 1}`).join(", ");
+}
+
+function completeQuest(slug) {
+  const quest = content.questBySlug[slug];
+  if (!isQuestReady(quest)) return addLog(`${quest.title} is not ready to complete yet.`);
+  state.completedQuests.push(slug);
+  state.activeQuests = state.activeQuests.filter((activeSlug) => activeSlug !== slug);
+  state.character.gil = (state.character.gil ?? 0) + (quest.rewards?.gil ?? 0);
+  for (const [itemSlug, qty] of Object.entries(quest.rewards?.items ?? {})) addItem(itemSlug, qty);
+  addLog(`Completed quest: ${quest.title}.`);
+  assets.play("ui_confirm");
+  renderNPCs();
 }
 
 function questSummary(quest) {
@@ -151,6 +202,7 @@ function acceptQuest(slug) {
   if (state.activeQuests.includes(slug)) return addLog("That quest is already in your journal.");
   const quest = content.questBySlug[slug];
   state.activeQuests.push(slug);
+  state.questProgress[slug] = {};
   addLog(`Accepted quest: ${quest.title}.`);
   assets.play("ui_confirm");
   renderNPCs();
@@ -165,13 +217,19 @@ function renderNPCs() {
     const questActions = quests.map((quest) => {
       const active = state.activeQuests.includes(quest.slug);
       const done = state.completedQuests.includes(quest.slug);
-      const label = done ? "Complete" : active ? "In Journal" : "Accept Quest";
-      return `<div class="quest-callout"><strong>${quest.title}</strong><p>${questSummary(quest)}</p><button data-quest="${quest.slug}" ${active || done ? "disabled" : ""}>${label}</button></div>`;
+      const ready = active && isQuestReady(quest);
+      const label = done ? "Complete" : ready ? "Complete Quest" : active ? "In Journal" : "Accept Quest";
+      const progress = active ? `<p class="quest-progress">Progress: ${questProgressText(quest)}</p>` : "";
+      return `<div class="quest-callout"><strong>${quest.title}</strong><p>${questSummary(quest)}</p>${progress}<button data-quest="${quest.slug}" ${done || (active && !ready) ? "disabled" : ""}>${label}</button></div>`;
     }).join("");
     return card(npc.name, npc.dialogue ?? "They have nothing to say yet.", [mapName(npc.map_slug), quests.length ? "quest" : "dialogue"], questActions || `<button data-talk="${npc.slug}">Talk</button>`);
   }).join("")}</div>`;
   els.screen.querySelectorAll("[data-talk]").forEach((b) => b.addEventListener("click", () => { addLog(`${content.npcBySlug[b.dataset.talk].name}: ${content.npcBySlug[b.dataset.talk].dialogue}`); assets.play("ui_confirm"); }));
-  els.screen.querySelectorAll("[data-quest]").forEach((b) => b.addEventListener("click", () => acceptQuest(b.dataset.quest)));
+  els.screen.querySelectorAll("[data-quest]").forEach((b) => b.addEventListener("click", () => {
+    const slug = b.dataset.quest;
+    if (state.activeQuests.includes(slug) && isQuestReady(content.questBySlug[slug])) completeQuest(slug);
+    else acceptQuest(slug);
+  }));
 }
 
 function renderTravel() {
@@ -203,7 +261,7 @@ function combatAction(action) {
   }
   if (action === "defend") addLog("You brace for impact.");
   if (action === "flee") { if (roll(1, 100) <= 55) { addLog("You escaped."); assets.play("ui_cancel"); state.combat = null; return render(); } addLog("Couldn't escape!"); }
-  if (state.combat.hp <= 0) { state.character.exp += state.combat.mob.level * 20; addLog(`${state.combat.mob.name} defeated! EXP +${state.combat.mob.level * 20}.`); state.combat = null; return render(); }
+  if (state.combat.hp <= 0) { state.character.exp += state.combat.mob.level * 20; updateQuestProgress("defeat", state.combat.mob.family); addLog(`${state.combat.mob.name} defeated! EXP +${state.combat.mob.level * 20}.`); state.combat = null; return render(); }
   const incoming = action === "defend" ? Math.max(1, Math.floor(mobDamage() / 2)) : mobDamage();
   state.character.hp -= incoming;
   addLog(`${state.combat.mob.name} hits you for ${incoming}.`);
@@ -261,6 +319,7 @@ function fishingAction(action) {
   if (fish.patience <= 0 && fish.progress < 100) { addLog("The bite faded before you could land it."); state.fishing = null; assets.play("ui_cancel"); return renderGathering(); }
   if (fish.progress >= 100) {
     addItem(fish.loot);
+    updateQuestProgress("gather", fish.loot);
     addLog(`Landed ${content.itemBySlug[fish.loot]?.name ?? fish.loot}!`);
     state.fishing = null;
     assets.play("fish_catch");
@@ -287,6 +346,7 @@ function useNode(node) {
   if (node.kind.includes("fishing")) return startFishing(node);
   const loot = weighted(node.loot_table.map((x) => [x.item, x.weight]));
   addItem(loot);
+  updateQuestProgress("gather", loot);
   addLog(`Gathered ${content.itemBySlug[loot]?.name ?? loot}.`);
   assets.play("ui_confirm");
   render();
