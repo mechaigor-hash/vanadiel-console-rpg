@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, equip_item, equipment_bonuses, equipped_items, init_db, list_inventory, load_content_pack, set_current_location, unequip_slot
 from vanadiel_console.models import CharacterBuild, calculate_stats
-from vanadiel_console.systems import accept_quest, auto_combat, available_quests, craft, defeat_mob, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked
+from vanadiel_console.systems import accept_quest, apply_experience, auto_combat, available_quests, craft, defeat_mob, exp_to_next_level, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked
 
 
 def memory_db():
@@ -147,6 +147,30 @@ def test_quest_prerequisites_gate_followup_until_complete():
     accept_quest(con, cid, "gate_guard_followup")
     active = con.execute("SELECT status FROM character_quests WHERE character_id=? AND quest_slug='gate_guard_followup'", (cid,)).fetchone()
     assert active["status"] == "active"
+
+
+def test_experience_thresholds_level_character_and_refresh_stats():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Leveler", "Hume", "Male", "Bastok", "Warrior", None))
+    before = con.execute("SELECT level, exp, hp, str FROM characters WHERE id=?", (cid,)).fetchone()
+    assert exp_to_next_level(before["level"]) == 100
+    gained = apply_experience(con, cid, 100)
+    after = con.execute("SELECT level, exp, hp, str FROM characters WHERE id=?", (cid,)).fetchone()
+    assert gained == 1
+    assert after["level"] == 2
+    assert after["exp"] == 100
+    assert after["hp"] > before["hp"]
+    assert after["str"] > before["str"]
+
+
+def test_combat_victory_can_trigger_level_up(monkeypatch):
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Bopper", "Hume", "Male", "Bastok", "Warrior", None))
+    monkeypatch.setattr("random.randint", lambda a, b: 1)
+    defeat_mob(con, cid, "yagudo_acolyte_l5")
+    row = con.execute("SELECT level, exp FROM characters WHERE id=?", (cid,)).fetchone()
+    assert row["level"] == 2
+    assert row["exp"] == 100
 
 
 def test_defeat_mob_grants_exp_and_possible_inventory_changes(monkeypatch):

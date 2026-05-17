@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 24 - Level-up rules
+
+- Added cumulative early-game EXP thresholds with `exp_to_next_level()`.
+- Added `apply_experience()` to grant EXP, apply one or more level-ups, and refresh character base stats from race/nation/job/subjob scaling.
+- Wired direct mob defeats and interactive combat victories through the level-up flow.
+- Added tests for threshold behavior, stat refresh, and combat-triggered level-up.
+
 ## Revision 23 - CI matrix hardening
 
 - Expanded GitHub Actions pytest coverage to Python 3.11, 3.12, and 3.13.

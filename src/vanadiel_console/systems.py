@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from collections.abc import Sequence
 
 from .db import add_item
+from .models import CharacterBuild, calculate_stats
 
 
 @dataclass
@@ -59,6 +60,33 @@ def weighted_choice(rows: Sequence[tuple[str, int]]) -> str:
     return rows[-1][0]
 
 
+
+def exp_to_next_level(level: int) -> int:
+    """Cumulative EXP required for the next level. Simple early-game curve."""
+    return max(1, level) * 100
+
+
+def apply_experience(con: sqlite3.Connection, character_id: int, exp: int) -> int:
+    """Add EXP, apply level-ups, refresh base stats, and return levels gained."""
+    row = con.execute("SELECT * FROM characters WHERE id = ?", (character_id,)).fetchone()
+    if not row:
+        raise ValueError(f"Unknown character id: {character_id}")
+    total_exp = row["exp"] + exp
+    level = row["level"]
+    levels_gained = 0
+    while total_exp >= exp_to_next_level(level):
+        level += 1
+        levels_gained += 1
+    if levels_gained:
+        stats = calculate_stats(CharacterBuild(row["name"], row["race"], row["sex"], row["nation"], row["main_job"], row["sub_job"]), level=level)
+        con.execute(
+            """UPDATE characters SET level=?, exp=?, hp=?, mp=?, str=?, dex=?, vit=?, agi=?, int=?, mnd=?, chr=? WHERE id=?""",
+            (level, total_exp, stats["hp"], stats["mp"], stats["str"], stats["dex"], stats["vit"], stats["agi"], stats["int"], stats["mnd"], stats["chr"], character_id),
+        )
+    else:
+        con.execute("UPDATE characters SET exp = ? WHERE id = ?", (total_exp, character_id))
+    return levels_gained
+
 def roll_mob_loot(con: sqlite3.Connection, mob_slug: str) -> list[tuple[str, int]]:
     rows = con.execute("SELECT item_slug, weight, min_qty, max_qty FROM mob_loot WHERE mob_slug = ?", (mob_slug,)).fetchall()
     drops: list[tuple[str, int]] = []
@@ -76,7 +104,7 @@ def defeat_mob(con: sqlite3.Connection, character_id: int, mob_slug: str) -> lis
     drops = roll_mob_loot(con, mob_slug)
     for item_slug, qty in drops:
         add_item(con, character_id, item_slug, qty)
-    con.execute("UPDATE characters SET exp = exp + ? WHERE id = ?", (mob["level"] * 20, character_id))
+    apply_experience(con, character_id, mob["level"] * 20)
     con.commit()
     return drops
 
@@ -186,7 +214,7 @@ def finish_combat_victory(con: sqlite3.Connection, character_id: int, mob_slug: 
     drops = roll_mob_loot(con, mob_slug)
     for item_slug, qty in drops:
         add_item(con, character_id, item_slug, qty)
-    con.execute("UPDATE characters SET exp = exp + ? WHERE id = ?", (exp, character_id))
+    apply_experience(con, character_id, exp)
     con.commit()
     return exp, drops
 
