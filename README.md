@@ -114,6 +114,7 @@ Project checklist is also tracked in [`TODO.md`](TODO.md).
 - [x] Add interactive fishing tension loop.
 - [x] Add quest journal progression and completion rewards.
 - [x] Add quest/mission prerequisite gating.
+- [x] Add death/return-home handling.
 - [ ] Add nation-specific opening missions.
 - [x] Add first expanded 75-era/WotG seed slice for maps, NPCs, mobs, and loot.
 - [ ] Continue fleshing out maps, NPCs, mobs, fish, recipes, mining/logging nodes.

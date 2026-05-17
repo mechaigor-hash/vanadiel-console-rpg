@@ -71,7 +71,7 @@
 - [x] Add equipment equip/unequip flow.
 - [x] Add derived attack/defense/magic stats from gear.
 - [x] Add level-up rules and EXP thresholds.
-- [ ] Add death/return-home handling.
+- [x] Add death/return-home handling.
 
 ### Quest / mission systems
 

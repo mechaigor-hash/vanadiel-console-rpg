@@ -6,7 +6,7 @@ import sqlite3
 from dataclasses import dataclass
 from collections.abc import Sequence
 
-from .db import add_item
+from .db import STARTING_MAP_BY_NATION, add_item
 from .models import CharacterBuild, calculate_stats
 
 
@@ -219,6 +219,25 @@ def finish_combat_victory(con: sqlite3.Connection, character_id: int, mob_slug: 
     return exp, drops
 
 
+def return_home_after_knockout(con: sqlite3.Connection, character_id: int) -> str:
+    """Recover a knocked-out character at their nation home point.
+
+    This is intentionally forgiving for the prototype: no EXP loss yet, full HP/MP
+    restored from current level stats, and location reset to the starting nation.
+    """
+    row = con.execute("SELECT * FROM characters WHERE id = ?", (character_id,)).fetchone()
+    if not row:
+        raise ValueError(f"Unknown character id: {character_id}")
+    home_map = STARTING_MAP_BY_NATION.get(row["nation"], "southern_sandoria")
+    stats = calculate_stats(CharacterBuild(row["name"], row["race"], row["sex"], row["nation"], row["main_job"], row["sub_job"]), level=row["level"])
+    con.execute(
+        """UPDATE characters SET current_map=?, hp=?, mp=? WHERE id=?""",
+        (home_map, stats["hp"], stats["mp"], character_id),
+    )
+    con.commit()
+    return home_map
+
+
 def auto_combat(con: sqlite3.Connection, character_id: int, mob_slug: str, actions: Sequence[str]) -> CombatResult:
     """Non-interactive combat runner for tests and future automation."""
     player = load_player_combatant(con, character_id)
@@ -236,7 +255,8 @@ def auto_combat(con: sqlite3.Connection, character_id: int, mob_slug: str, actio
             exp, drops = finish_combat_victory(con, character_id, mob_slug)
             return CombatResult(True, False, exp, drops, log)
         if player.hp <= 0:
-            log.append(f"{player.name} is knocked out.")
+            home_map = return_home_after_knockout(con, character_id)
+            log.append(f"{player.name} is knocked out and returns to {home_map}.")
             return CombatResult(False, False, 0, [], log)
     return CombatResult(False, False, 0, [], log)
 

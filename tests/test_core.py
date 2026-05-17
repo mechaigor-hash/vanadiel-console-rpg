@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from vanadiel_console.db import ContentValidationError, add_item, connect, create_character, current_location, equip_item, equipment_bonuses, equipped_items, init_db, list_inventory, load_content_pack, set_current_location, unequip_slot
 from vanadiel_console.models import CharacterBuild, calculate_stats
-from vanadiel_console.systems import accept_quest, apply_experience, auto_combat, available_quests, craft, defeat_mob, exp_to_next_level, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked
+from vanadiel_console.systems import accept_quest, apply_experience, auto_combat, available_quests, craft, defeat_mob, exp_to_next_level, fishing_attempt, fishing_nodes_for_water, gather, mark_quest_complete, missing_quest_prerequisites, quest_is_unlocked, return_home_after_knockout
 
 
 def memory_db():
@@ -181,6 +181,31 @@ def test_defeat_mob_grants_exp_and_possible_inventory_changes(monkeypatch):
     assert drops
     exp = con.execute("SELECT exp FROM characters WHERE id=?", (cid,)).fetchone()["exp"]
     assert exp == 100
+
+
+def test_knockout_returns_character_to_nation_home_and_restores_hp_mp():
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Floored", "Tarutaru", "Female", "Windurst", "Black Mage", None))
+    set_current_location(con, cid, "west_ronfaure")
+    con.execute("UPDATE characters SET hp=1, mp=0 WHERE id=?", (cid,))
+    home = return_home_after_knockout(con, cid)
+    row = con.execute("SELECT current_map, hp, mp FROM characters WHERE id=?", (cid,)).fetchone()
+    assert home == "windurst_waters"
+    assert row["current_map"] == "windurst_waters"
+    assert row["hp"] > 1
+    assert row["mp"] > 0
+
+
+def test_auto_combat_knockout_applies_return_home(monkeypatch):
+    con = memory_db()
+    cid = create_character(con, CharacterBuild("Bonked", "Tarutaru", "Male", "Bastok", "Black Mage", None))
+    set_current_location(con, cid, "west_ronfaure")
+    monkeypatch.setattr("random.randint", lambda a, b: b)
+    result = auto_combat(con, cid, "campaign_orc_l72", ["attack"])
+    row = con.execute("SELECT current_map FROM characters WHERE id=?", (cid,)).fetchone()
+    assert result.victory is False
+    assert any("knocked out" in line for line in result.log)
+    assert row["current_map"] == "bastok_markets"
 
 
 def test_interactive_combat_can_defeat_sample_mob(monkeypatch):

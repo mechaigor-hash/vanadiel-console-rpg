@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 25 - Knockout return-home handling
+
+- Added `return_home_after_knockout()` to recover defeated characters at their nation home point.
+- Knockouts now restore HP/MP from current level stats and reset location without applying an EXP penalty yet.
+- Wired `auto_combat()` defeats through the return-home flow.
+- Added tests for direct knockout recovery and combat-triggered return-home behavior.
+
 ## Revision 24 - Level-up rules
 
 - Added cumulative early-game EXP thresholds with `exp_to_next_level()`.
