@@ -38,6 +38,7 @@
 - [x] Added web fishing HUD mini-game with reel/wait/slacken tension management.
 - [x] Added web NPC interaction screen with dialogue and quest acceptance.
 - [x] Added web quest objective progress tracking and reward payout.
+- [x] Added web quest journal with active/completed/available quest groups.
 - [x] Expanded first 75-era/WotG content seed slice: 40+ maps, 15+ NPCs, 30+ mobs, and additional loot tables.
 - [x] Moved starter content out of Python constants into bundled JSON content pack: `src/vanadiel_console/data/core_content.json`.
 - [x] Added content-pack loader so future content can be added without editing core Python.
@@ -68,8 +69,8 @@
 
 ### Quest / mission systems
 
-- [ ] Add quest journal UI.
-- [ ] Add quest accept/active/complete states in gameplay.
+- [x] Add quest journal UI.
+- [x] Add quest accept/active/complete states in gameplay.
 - [x] Add objective progress tracking.
 - [x] Add reward payout logic.
 - [ ] Add nation-specific opening missions for Bastok, San d'Oria, and Windurst.

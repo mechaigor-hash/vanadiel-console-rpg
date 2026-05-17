@@ -26,6 +26,7 @@ Do not open `index.html` directly from the file browser; the browser blocks `fet
 - Loads `core_content.json` generated from the Python content pack.
 - World screen showing local NPCs, mobs, and gathering nodes.
 - NPC interaction screen with dialogue, quest summaries, quest acceptance, objective progress, completion, and rewards.
+- Quest Journal screen grouping active quests, completed quests, and available leads.
 - Region/map travel screen.
 - Clickable local combat prototype.
 - Clickable local gathering prototype plus fishing mini-game with reel/wait/slacken choices.

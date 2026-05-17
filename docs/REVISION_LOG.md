@@ -1,5 +1,12 @@
 # Revision Log
 
+## Revision 16 - Web quest journal
+
+- Added a Quest Journal screen to the web sidebar.
+- Journal groups active quests, completed quests, and available leads.
+- Active quest cards show objective progress, start NPC/location, readiness, and completion action when turn-in is ready.
+- Quest completion now refreshes either the NPC screen or journal depending on where it was triggered.
+
 ## Revision 15 - Web quest progress and rewards
 
 - Added quest objective progress tracking for defeat and gather objectives in the web client.

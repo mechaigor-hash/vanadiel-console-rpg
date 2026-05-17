@@ -181,7 +181,8 @@ function completeQuest(slug) {
   for (const [itemSlug, qty] of Object.entries(quest.rewards?.items ?? {})) addItem(itemSlug, qty);
   addLog(`Completed quest: ${quest.title}.`);
   assets.play("ui_confirm");
-  renderNPCs();
+  if (state.screen === "quests") renderQuestJournal();
+  else renderNPCs();
 }
 
 function questSummary(quest) {
@@ -196,6 +197,39 @@ function questSummary(quest) {
   return `${objectiveText || "Speak with locals"}${rewardBits.length ? ` • Rewards: ${rewardBits.join(", ")}` : ""}`;
 }
 
+function questCard(quest, status) {
+  const active = status === "active";
+  const done = status === "complete";
+  const ready = active && isQuestReady(quest);
+  const startNpc = content.npcBySlug[quest.start_npc_slug];
+  const badges = [quest.quest_type ?? "quest", done ? "complete" : ready ? "ready" : active ? "active" : "available"];
+  const lines = [
+    questSummary(quest),
+    startNpc ? `Start: ${startNpc.name} in ${mapName(startNpc.map_slug)}` : "Start NPC unknown",
+    active ? `Progress: ${questProgressText(quest)}` : "",
+    ready ? "Ready to turn in." : "",
+  ].filter(Boolean).join("<br>");
+  const action = ready ? `<button data-complete-quest="${quest.slug}">Complete Quest</button>` : "";
+  return card(quest.title, lines, badges, action);
+}
+
+function renderQuestJournal() {
+  els.title.textContent = "Quest Journal";
+  if (!state.character) { els.screen.innerHTML = `<p>Create a character to begin tracking quests.</p>`; return; }
+  const active = state.activeQuests.map((slug) => content.questBySlug[slug]).filter(Boolean);
+  const completed = state.completedQuests.map((slug) => content.questBySlug[slug]).filter(Boolean);
+  const available = (content.quests ?? []).filter((quest) => !state.activeQuests.includes(quest.slug) && !state.completedQuests.includes(quest.slug));
+  els.screen.innerHTML = `
+    <div class="hero-art" style="--art: url('assets/images/map-placeholder.svg')"></div>
+    <h2>Active Quests</h2>
+    ${active.length ? `<div class="card-grid">${active.map((quest) => questCard(quest, "active")).join("")}</div>` : `<p>No active quests. Talk to local NPCs to accept work.</p>`}
+    <h2>Completed Quests</h2>
+    ${completed.length ? `<div class="card-grid">${completed.map((quest) => questCard(quest, "complete")).join("")}</div>` : `<p>No completed quests yet.</p>`}
+    <h2>Available Leads</h2>
+    ${available.length ? `<div class="card-grid">${available.map((quest) => questCard(quest, "available")).join("")}</div>` : `<p>No available quest leads left in this seed slice.</p>`}`;
+  els.screen.querySelectorAll("[data-complete-quest]").forEach((b) => b.addEventListener("click", () => completeQuest(b.dataset.completeQuest)));
+}
+
 function acceptQuest(slug) {
   if (!state.character) return addLog("Create a character first.");
   if (state.completedQuests.includes(slug)) return addLog("That quest is already complete.");
@@ -205,7 +239,8 @@ function acceptQuest(slug) {
   state.questProgress[slug] = {};
   addLog(`Accepted quest: ${quest.title}.`);
   assets.play("ui_confirm");
-  renderNPCs();
+  if (state.screen === "quests") renderQuestJournal();
+  else renderNPCs();
 }
 
 function renderNPCs() {
@@ -372,7 +407,7 @@ function renderContent() {
 function render() {
   renderCharacter();
   if (!state.character && state.screen !== "content") els.screen.innerHTML = `<p>Create a character to begin.</p>`;
-  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, content: renderContent };
+  const routes = { world: renderWorld, travel: renderTravel, npcs: renderNPCs, quests: renderQuestJournal, combat: renderCombat, gathering: renderGathering, inventory: renderInventory, content: renderContent };
   (routes[state.screen] ?? renderWorld)();
 }
 
