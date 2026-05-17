@@ -142,6 +142,27 @@ def test_expanded_era_content_seeds_locations_npcs_and_mobs():
     assert wotg["name"] == "Southern San d'Oria (S)"
 
 
+def test_deeper_starter_zone_content_seeds_mobs_nodes_and_sidequests():
+    con = memory_db()
+    starter_mobs = con.execute("""
+        SELECT slug FROM mobs
+        WHERE slug IN ('ronfaure_beetle_l4', 'land_crab_l4', 'saruta_crawler_l4')
+    """).fetchall()
+    assert {row["slug"] for row in starter_mobs} == {"ronfaure_beetle_l4", "land_crab_l4", "saruta_crawler_l4"}
+
+    starter_nodes = con.execute("""
+        SELECT slug, kind FROM gathering_nodes
+        WHERE slug IN ('ronfaure_logging_stand', 'south_gustaberg_tidepool', 'sarutabaruta_grass_patch')
+    """).fetchall()
+    assert {row["slug"] for row in starter_nodes} == {"ronfaure_logging_stand", "south_gustaberg_tidepool", "sarutabaruta_grass_patch"}
+
+    sidequests = con.execute("""
+        SELECT slug FROM quests
+        WHERE slug IN ('ronfaure_patrol_beetle_watch', 'gustaberg_survey_flint_marker', 'saruta_research_cotton_sample')
+    """).fetchall()
+    assert len(sidequests) == 3
+
+
 def test_nation_opening_missions_are_seeded_and_available():
     con = memory_db()
     expected = {

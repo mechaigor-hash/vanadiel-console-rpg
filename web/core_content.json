@@ -326,6 +326,30 @@
       "name": "Beastmen Seal",
       "kind": "currency",
       "data": {}
+    },
+    {
+      "slug": "maple_log",
+      "name": "Maple Log",
+      "kind": "material",
+      "stack_size": 12
+    },
+    {
+      "slug": "flint_stone",
+      "name": "Flint Stone",
+      "kind": "material",
+      "stack_size": 12
+    },
+    {
+      "slug": "saruta_cotton",
+      "name": "Saruta Cotton",
+      "kind": "material",
+      "stack_size": 12
+    },
+    {
+      "slug": "bird_feather",
+      "name": "Bird Feather",
+      "kind": "material",
+      "stack_size": 12
     }
   ],
   "maps": [
@@ -807,6 +831,24 @@
       "name": "Crystal War Scout",
       "map_slug": "jugner_forest_s",
       "dialogue": "This is the past. Beastman patrols move like armies here."
+    },
+    {
+      "slug": "ronfaure_patrol",
+      "name": "Ronfaure Patrol",
+      "map_slug": "west_ronfaure",
+      "dialogue": "The hares are easy enough, but the beetles chew through careless boots."
+    },
+    {
+      "slug": "gustaberg_surveyor",
+      "name": "Gustaberg Surveyor",
+      "map_slug": "south_gustaberg",
+      "dialogue": "Ore veins shift after every quake. Mark your finds and keep moving."
+    },
+    {
+      "slug": "saruta_researcher",
+      "name": "Sarutabaruta Researcher",
+      "map_slug": "east_sarutabaruta",
+      "dialogue": "Mandragora sprouts tell us where the soil is waking up."
     }
   ],
   "quests": [
@@ -917,6 +959,66 @@
       ],
       "rewards": {
         "gil": 120,
+        "items": {
+          "wind_crystal": 1
+        }
+      }
+    },
+    {
+      "slug": "ronfaure_patrol_beetle_watch",
+      "title": "Ronfaure Patrol: Beetle Watch",
+      "quest_type": "side",
+      "start_npc_slug": "ronfaure_patrol",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "defeat",
+          "mob_family": "Beetle",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 80,
+        "items": {
+          "maple_log": 1
+        }
+      }
+    },
+    {
+      "slug": "gustaberg_survey_flint_marker",
+      "title": "Gustaberg Survey: Tide and Stone",
+      "quest_type": "side",
+      "start_npc_slug": "gustaberg_surveyor",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "gather",
+          "item": "copper_ore",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 80,
+        "items": {
+          "flint_stone": 1
+        }
+      }
+    },
+    {
+      "slug": "saruta_research_cotton_sample",
+      "title": "Sarutabaruta Research: Cotton Sample",
+      "quest_type": "side",
+      "start_npc_slug": "saruta_researcher",
+      "prerequisites": [],
+      "objectives": [
+        {
+          "type": "gather",
+          "item": "saruta_cotton",
+          "count": 1
+        }
+      ],
+      "rewards": {
+        "gil": 80,
         "items": {
           "wind_crystal": 1
         }
@@ -1320,6 +1422,77 @@
         "mp": 520,
         "mnd": 88
       }
+    },
+    {
+      "slug": "ronfaure_beetle_l4",
+      "name": "Ronfaure Beetle",
+      "family": "Beetle",
+      "job": null,
+      "level": 4,
+      "map_slug": "west_ronfaure",
+      "stats": {
+        "hp": 38,
+        "vit": 8
+      }
+    },
+    {
+      "slug": "forest_funguar_l6",
+      "name": "Forest Funguar",
+      "family": "Funguar",
+      "job": null,
+      "level": 6,
+      "map_slug": "east_ronfaure",
+      "stats": {
+        "hp": 52,
+        "vit": 9
+      }
+    },
+    {
+      "slug": "gustaberg_vulture_l3",
+      "name": "Gustaberg Vulture",
+      "family": "Bird",
+      "job": null,
+      "level": 3,
+      "map_slug": "north_gustaberg",
+      "stats": {
+        "hp": 30,
+        "agi": 8
+      }
+    },
+    {
+      "slug": "land_crab_l4",
+      "name": "Land Crab",
+      "family": "Crab",
+      "job": null,
+      "level": 4,
+      "map_slug": "south_gustaberg",
+      "stats": {
+        "hp": 42,
+        "vit": 10
+      }
+    },
+    {
+      "slug": "saruta_crawler_l4",
+      "name": "Sarutabaruta Crawler",
+      "family": "Crawler",
+      "job": null,
+      "level": 4,
+      "map_slug": "east_sarutabaruta",
+      "stats": {
+        "hp": 36
+      }
+    },
+    {
+      "slug": "savanna_rarab_l2",
+      "name": "Savanna Rarab",
+      "family": "Rabbit",
+      "job": null,
+      "level": 2,
+      "map_slug": "west_sarutabaruta",
+      "stats": {
+        "hp": 24,
+        "agi": 7
+      }
     }
   ],
   "loot": [
@@ -1658,6 +1831,48 @@
       "weight": 20,
       "min_qty": 1,
       "max_qty": 1
+    },
+    {
+      "mob_slug": "ronfaure_beetle_l4",
+      "item_slug": "insect_wing",
+      "weight": 45,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "forest_funguar_l6",
+      "item_slug": "wind_crystal",
+      "weight": 12,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "gustaberg_vulture_l3",
+      "item_slug": "bird_feather",
+      "weight": 55,
+      "min_qty": 1,
+      "max_qty": 2
+    },
+    {
+      "mob_slug": "land_crab_l4",
+      "item_slug": "water_crystal",
+      "weight": 10,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "saruta_crawler_l4",
+      "item_slug": "silk_thread",
+      "weight": 45,
+      "min_qty": 1,
+      "max_qty": 1
+    },
+    {
+      "mob_slug": "savanna_rarab_l2",
+      "item_slug": "rabbit_hide",
+      "weight": 25,
+      "min_qty": 1,
+      "max_qty": 1
     }
   ],
   "recipes": [
@@ -1758,6 +1973,66 @@
         {
           "item": "earth_crystal",
           "weight": 8
+        }
+      ]
+    },
+    {
+      "slug": "ronfaure_logging_stand",
+      "map_slug": "east_ronfaure",
+      "kind": "logging",
+      "loot_table": [
+        {
+          "item": "maple_log",
+          "weight": 70
+        },
+        {
+          "item": "wind_crystal",
+          "weight": 8
+        }
+      ]
+    },
+    {
+      "slug": "south_gustaberg_tidepool",
+      "map_slug": "south_gustaberg",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "bastore_sardine",
+          "weight": 60
+        },
+        {
+          "item": "water_crystal",
+          "weight": 5
+        }
+      ]
+    },
+    {
+      "slug": "sarutabaruta_grass_patch",
+      "map_slug": "east_sarutabaruta",
+      "kind": "harvesting",
+      "loot_table": [
+        {
+          "item": "saruta_cotton",
+          "weight": 65
+        },
+        {
+          "item": "wind_crystal",
+          "weight": 8
+        }
+      ]
+    },
+    {
+      "slug": "west_sarutabaruta_pond",
+      "map_slug": "west_sarutabaruta",
+      "kind": "fishing",
+      "loot_table": [
+        {
+          "item": "moat_carp",
+          "weight": 55
+        },
+        {
+          "item": "water_crystal",
+          "weight": 5
         }
       ]
     }

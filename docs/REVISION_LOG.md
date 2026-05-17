@@ -1,5 +1,13 @@
 # Revision Log
 
+## Revision 31 - Deeper starter-zone content
+
+- Added new starter-zone mobs across Ronfaure, Gustaberg, and Sarutabaruta.
+- Added extra starter gathering nodes for logging, fishing, and harvesting.
+- Added three local sidequests tied to new starter-zone NPCs.
+- Added new material items and loot hooks for the expanded early-game loop.
+- Mirrored all content into the web content pack and added seed coverage.
+
 ## Revision 30 - Terminal-width-aware layout
 
 - Added terminal width helpers with min/max clamps for compact and wide terminals.

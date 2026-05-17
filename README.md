@@ -60,6 +60,7 @@ pytest
 - Location-driven gathering/fishing: local nodes are listed from the character's current map.
 - Fishing split by water type: freshwater, saltwater, and ice fishing samples.
 - First-pass nation opening missions for San d'Oria, Bastok, and Windurst.
+- Expanded starter zones with extra mobs, gathering nodes, NPCs, and sidequests.
 
 ## Extending content
 
